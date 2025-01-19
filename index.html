@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+    <title>Job Search Log</title>
+</head>
+
+<body>
+    <h1>Job Search Log</h1>
+    <button class="button button-outline">+ Add</button>
+    <div x-data="$store.jobsearchdata">
+        <h3 x-text="foo">HUH?</h3>
+        <div x-show="empty">
+            <h2>No job search activities have been added yet.</h2>
+        </div>
+        <div x-show="!empty">
+            <table>
+                <thead>
+                    <th>
+                        <span>Date Engaged</span>
+                    </th>
+                    <th>
+                        <span>Date Updated</span>
+                    </th>
+                    <th>
+                        <span>Employer</span>
+                    </th>
+                </thead>
+                <tbody>
+                    <template x-for="eachSearch in searches">
+                        <tr>
+                            <td><span x-text="eachSearch.StartDate"></span></td>
+                            <td><span x-text="eachSearch.UpdateDate"></span></td>
+                            <td><span x-text="eachSearch.EmployerName"></span></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
