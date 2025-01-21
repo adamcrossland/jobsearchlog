@@ -5,36 +5,73 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+    <!-- Embed Font -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto+Slab">
+
+    <!-- Use the following CSS rules to specify these families -->
+    <style>
+    body {
+    font-family: 'Roboto Slab', serif;
+    }
+    </style>
+    <link rel="stylesheet" href="styles.css">
     <title>Job Search Log</title>
 </head>
 
 <body>
     <h1>Job Search Log</h1>
-    <button class="button button-outline">+ Add</button>
     <div x-data="$store.jobsearchdata">
-        <h3 x-text="foo">HUH?</h3>
+        <button class="button button-outline"
+                @click="newSearchRow()">+ Add</button>
         <div x-show="empty">
             <h2>No job search activities have been added yet.</h2>
         </div>
-        <div x-show="!empty">
-            <table>
+        <div class="search-data" x-show="!empty">
+            <table id="searches-table">
                 <thead>
+                    <th>
+                        <span>Employer</span>
+                    </th>
                     <th>
                         <span>Date Engaged</span>
                     </th>
                     <th>
                         <span>Date Updated</span>
                     </th>
-                    <th>
-                        <span>Employer</span>
-                    </th>
                 </thead>
                 <tbody>
-                    <template x-for="eachSearch in searches">
-                        <tr>
-                            <td><span x-text="eachSearch.StartDate"></span></td>
-                            <td><span x-text="eachSearch.UpdateDate"></span></td>
-                            <td><span x-text="eachSearch.EmployerName"></span></td>
+                    <template x-for="eachSearch in searches" :key="eachSearch.Id">
+                        <tr x-id="['searchRow']">
+                            <td @click="eachSearch.EmployerName.BeingEdited = true"
+                                x-show="!eachSearch.EmployerName.BeingEdited">
+                                <span x-text="eachSearch.EmployerName.Value"></span>
+                            </td>
+                            <td :id="$id('employer-name-input')"
+                                @keyup.enter="eachSearch.EmployerName.BeingEdited = false"
+                                @keyup.esc="eachSearch.EmployerName.BeingEdited = false"
+                                x-show="eachSearch.EmployerName.BeingEdited">
+                                <input type="text" x-model="eachSearch.EmployerName.Value">
+                            </td>
+                            <td @click="eachSearch.StartDate.BeingEdited = true"
+                                x-show="!eachSearch.StartDate.BeingEdited">
+                                <span x-text="eachSearch.StartDate.Value"></span>
+                            </td>
+                            <td :id="$id('start-date-input')"
+                                @keyup.enter="eachSearch.StartDate.BeingEdited = false"
+                                @keyup.esc="eachSearch.StartDate.BeingEdited = false"
+                                x-show="eachSearch.StartDate.BeingEdited">
+                                <input type="text" x-model="eachSearch.StartDate.Value">
+                            </td>
+                            <td @click="eachSearch.UpdatedDate.BeingEdited = true"
+                                x-show="!eachSearch.UpdatedDate.BeingEdited">
+                                <span x-text="eachSearch.UpdatedDate.Value"></span>
+                            </td>
+                            <td :id="$id('updated-date-input')"
+                                @keyup.enter="eachSearch.UpdatedDate.BeingEdited = false"
+                                @keyup.enter="eachSearch.UpdatedDate.BeingEdited = false"
+                                x-show="eachSearch.UpdatedDate.BeingEdited">
+                                <input type="text" x-model="eachSearch.UpdatedDate.Value">
+                            </td>
                         </tr>
                     </template>
                 </tbody>
