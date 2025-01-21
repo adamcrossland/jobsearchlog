@@ -1,0 +1,7 @@
+.search-data input {
+    width: 10vw;
+}
+
+tr {
+    min-height: 106px !important;
+}
