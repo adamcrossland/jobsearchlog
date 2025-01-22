@@ -33,7 +33,7 @@
                     </th>
                 </thead>
                 <tbody>
-                    <template x-for="eachSearch in JobSearchData" :key="eachSearch.Id">
+                    <template x-for="eachSearch in JobSearchData">
                         <tr x-id="['searchRow']">
                             <td @click="eachSearch.EmployerName.BeingEdited = true"
                                 x-show="!eachSearch.EmployerName.BeingEdited">
