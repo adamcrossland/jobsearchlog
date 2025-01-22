@@ -33,13 +33,16 @@ class JobSearchItem {
     }
 }
 
+const storageKey: string = "jobSearchData";
+
 class JobSearchViewModel {
+    
     public JobSearchData: JobSearchItem[];
     private nextRowId: number;
 
     constructor() {
         this.nextRowId = 0;
-        let storedJobSearchData: string|null = localStorage.getItem("jobSearchData");
+        let storedJobSearchData: string|null = localStorage.getItem(storageKey);
         if (storedJobSearchData != null &&  storedJobSearchData.length > 0) {
             this.JobSearchData = JSON.parse(storedJobSearchData);
         } else {
@@ -76,6 +79,12 @@ class JobSearchViewModel {
         Alpine.nextTick(() => {
             element.focus();
         });
+    }
+
+    public Persist(): void {
+        console.log("Persisted!");
+        let serializedData: string = JSON.stringify(this.JobSearchData);
+        localStorage.setItem(storageKey, serializedData);
     }
 }
 
