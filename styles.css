@@ -1,3 +1,7 @@
+body {
+    font-family: 'Roboto Slab', serif;
+}
+
 .search-data input {
     width: 10vw;
 }
