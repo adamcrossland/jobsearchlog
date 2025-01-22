@@ -42,6 +42,7 @@
                             <td :id="$id('employer-name-input')"
                                 @keyup.enter="eachSearch.EmployerName.BeingEdited = false"
                                 @keyup.esc="eachSearch.EmployerName.BeingEdited = false"
+                                @click.outside="Persist()"
                                 x-show="eachSearch.EmployerName.BeingEdited">
                                 <input type="text" x-model="eachSearch.EmployerName.Value">
                             </td>
@@ -52,6 +53,7 @@
                             <td :id="$id('start-date-input')"
                                 @keyup.enter="eachSearch.StartDate.BeingEdited = false"
                                 @keyup.esc="eachSearch.StartDate.BeingEdited = false"
+                                @click.outside="Persist()"
                                 x-show="eachSearch.StartDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.StartDate.Value">
                             </td>
@@ -62,6 +64,7 @@
                             <td :id="$id('updated-date-input')"
                                 @keyup.enter="eachSearch.UpdatedDate.BeingEdited = false"
                                 @keyup.enter="eachSearch.UpdatedDate.BeingEdited = false"
+                                @click.outside="Persist()"
                                 x-show="eachSearch.UpdatedDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.UpdatedDate.Value">
                             </td>
@@ -71,7 +74,7 @@
             </table>
         </div>
     </div>
-    <script type="module" src="/src/main.ts"></script>
+    <script defer type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
