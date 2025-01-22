@@ -15,11 +15,11 @@
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata">
         <button class="button button-outline"
-                @click="newSearchRow()">+ Add</button>
-        <div x-show="empty">
+                @click="NewSearchRow()">+ Add</button>
+        <div x-show="IsEmpty()">
             <h2>No job search activities have been added yet.</h2>
         </div>
-        <div class="search-data" x-show="!empty">
+        <div class="search-data" x-show="!IsEmpty()">
             <table id="searches-table">
                 <thead>
                     <th>
@@ -33,7 +33,7 @@
                     </th>
                 </thead>
                 <tbody>
-                    <template x-for="eachSearch in searches" :key="eachSearch.Id">
+                    <template x-for="eachSearch in JobSearchData" :key="eachSearch.Id">
                         <tr x-id="['searchRow']">
                             <td @click="eachSearch.EmployerName.BeingEdited = true"
                                 x-show="!eachSearch.EmployerName.BeingEdited">
@@ -53,7 +53,7 @@
                                 @keyup.enter="eachSearch.StartDate.BeingEdited = false"
                                 @keyup.esc="eachSearch.StartDate.BeingEdited = false"
                                 x-show="eachSearch.StartDate.BeingEdited">
-                                <input type="text" x-model="eachSearch.StartDate.Value">
+                                <input type="date" x-model="eachSearch.StartDate.Value">
                             </td>
                             <td @click="eachSearch.UpdatedDate.BeingEdited = true"
                                 x-show="!eachSearch.UpdatedDate.BeingEdited">
@@ -63,7 +63,7 @@
                                 @keyup.enter="eachSearch.UpdatedDate.BeingEdited = false"
                                 @keyup.enter="eachSearch.UpdatedDate.BeingEdited = false"
                                 x-show="eachSearch.UpdatedDate.BeingEdited">
-                                <input type="text" x-model="eachSearch.UpdatedDate.Value">
+                                <input type="date" x-model="eachSearch.UpdatedDate.Value">
                             </td>
                         </tr>
                     </template>

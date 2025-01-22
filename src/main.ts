@@ -4,41 +4,80 @@ import Alpine from 'alpinejs'
 // make Alpine on window available for better DX
 window.Alpine = Alpine
 
-interface DataItem {
-    Value: string;
-    BeingEdited: boolean;
+function dateToString(dateToConvert: Date): string {
+    return dateToConvert.toISOString().split('T')[0];
 }
 
-interface JobSearchItem {
+class DataItem {
+    public Value: string;
+    public BeingEdited: boolean;
+
+    constructor(value: string = "", beingEdited: boolean = false) {
+        this.Value = value;
+        this.BeingEdited = beingEdited;
+    }
+}
+
+class JobSearchItem {
     Id: number;
     StartDate: DataItem;
     UpdatedDate: DataItem;
     EmployerName: DataItem;
+
+    constructor(id: number, startDate: string = dateToString(new Date()),
+            updatedDate: string = dateToString(new Date()), employerName: string = "") {
+        this.Id = id;
+        this.StartDate = new DataItem(startDate, false);
+        this.UpdatedDate = new DataItem(updatedDate, false);
+        this.EmployerName = new DataItem(employerName, false);
+    }
 }
 
-let JobSearchData: JobSearchItem[] = [
-];
+class JobSearchViewModel {
+    public JobSearchData: JobSearchItem[];
+    private nextRowId: number;
 
-Alpine.store('jobsearchdata', {
-    searches: JobSearchData,
-
-    get empty() {
-        return this.searches.length === 0
-    },
-
-    newSearchRow() {
-        let newRow = {
-            Id: ++this.nextRowId,
-            StartDate: { Value: new Date().toDateString(), BeingEdited: true },
-            UpdatedDate: { Value: new Date().toDateString(), BeingEdited: true },
-            EmployerName: { Value: "", BeingEdited: true }
+    constructor() {
+        this.nextRowId = 0;
+        let storedJobSearchData: string|null = localStorage.getItem("jobSearchData");
+        if (storedJobSearchData != null &&  storedJobSearchData.length > 0) {
+            this.JobSearchData = JSON.parse(storedJobSearchData);
+        } else {
+            this.JobSearchData = [];
         }
-        this.searches.unshift(newRow);
-        Alpine.nextTick(() => {
-            document.querySelector("#searches-table tbody tr td + td input").focus();
-        });
-    },
-    nextRowId: 0
-});
+    }
 
+    public IsEmpty(): boolean {
+        return this.JobSearchData.length === 0;
+    }
+
+    public NewSearchRow(): void {
+        let currentDate:string = dateToString(new Date());
+        let newRow: JobSearchItem = new JobSearchItem(++this.nextRowId, currentDate, currentDate);
+        // Make fields ready to edit
+        newRow.EmployerName.BeingEdited = true;
+        newRow.StartDate.BeingEdited = true;
+        newRow.UpdatedDate.BeingEdited = true;
+        // Add to the top of the aray, so it will be visible to the user with no effort on their part
+        this.JobSearchData.unshift(newRow);
+
+        // Not totally sure that this belongs here, but it is convenient.
+        // TODO: determine if this is the optimal place to handle setting input focus
+        Alpine.nextTick(() => {
+            let firstElement: HTMLElement|null = document.querySelector("#searches-table tbody tr td + td input");
+            if (firstElement != null) {
+                firstElement.focus();
+            }
+        });
+    }
+
+    public EditField(field: DataItem, element: HTMLElement) {
+        field.BeingEdited = true;
+        Alpine.nextTick(() => {
+            element.focus();
+        });
+    }
+}
+
+Alpine.store('jobsearchdata', new JobSearchViewModel());
 Alpine.start()
