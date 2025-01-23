@@ -108,9 +108,11 @@ class JobSearchViewModel {
     
     public JobSearchData: JobSearchItem[];
     private nextRowId: number;
+    private rowsHaveBeenDeleted: boolean;
 
     constructor() {
         this.nextRowId = 0;
+        this.rowsHaveBeenDeleted = false;
         this.JobSearchData = [];
 
         // Load data from localStorage
@@ -165,8 +167,13 @@ class JobSearchViewModel {
 
     public get PersistableChanges():boolean {
         let haveChanges: boolean = false;
+
+        if (this.rowsHaveBeenDeleted) {
+            haveChanges = true;
+        }
+
         for (let i = 0; i < this.JobSearchData.length && !haveChanges; i++) {
-            haveChanges ||= this.JobSearchData[i].IsDirty; 
+            haveChanges ||= this.JobSearchData[i].IsDirty;
         }
 
         return haveChanges;
@@ -178,6 +185,21 @@ class JobSearchViewModel {
         });
         let serializedData: string = JSON.stringify(this.JobSearchData);
         localStorage.setItem(storageKey, serializedData);
+
+        this.rowsHaveBeenDeleted = false;
+    }
+
+    public Delete(id: number) {
+        let indexToDelete: number = -1;
+        for (let i = 0; i < this.JobSearchData.length && indexToDelete == -1; i++) {
+            if (this.JobSearchData[i].Id == id) {
+                indexToDelete = i;
+            }
+        }
+        if (indexToDelete > -1) {
+            this.JobSearchData.splice(indexToDelete, 1);
+            this.rowsHaveBeenDeleted = true;
+        }
     }
 }
 

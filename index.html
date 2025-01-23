@@ -31,6 +31,7 @@
                     <th>
                         <span>Date Updated</span>
                     </th>
+                    <th></th>
                 </thead>
                 <tbody>
                     <template x-for="eachSearch in JobSearchData">
@@ -67,6 +68,9 @@
                                 @keyup.enter="eachSearch.UpdatedDate.ResetChanges()"
                                 x-show="eachSearch.UpdatedDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.UpdatedDate.Data">
+                            </td>
+                            <td>
+                                <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">Delete</button>
                             </td>
                         </tr>
                     </template>
