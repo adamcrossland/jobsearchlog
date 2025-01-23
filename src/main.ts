@@ -12,9 +12,59 @@ class DataItem {
     public Value: string;
     public BeingEdited: boolean;
 
+    private tempValue: string|null;
+    private prepersistedValue: string | null;
+
     constructor(value: string = "", beingEdited: boolean = false) {
         this.Value = value;
+        this.tempValue = null;
+        this.prepersistedValue = null;
         this.BeingEdited = beingEdited;
+    }
+
+    public SaveChanges(): void {
+        if (this.tempValue != null && this.tempValue != this.Value) {
+            this.prepersistedValue = this.tempValue;
+            this.tempValue = null;
+            this.BeingEdited = false;
+        }
+    }
+
+    public ResetChanges(): void {
+        this.tempValue = null;
+        this.BeingEdited = false;
+    }
+
+    public get Data(): string {
+        if (this.tempValue != null) {
+            return this.tempValue;
+        } else if (this.prepersistedValue != null) {
+            return this.prepersistedValue;
+        }
+
+        return this.Value;
+    }
+
+    public set Data(newValue: string) {
+        this.tempValue = newValue;
+    }
+
+    get HasChanges(): boolean {
+        return this.prepersistedValue != null;
+    }
+
+    public PrepareToPersist() {
+        if (this.prepersistedValue != null) {
+            this.Value = this.prepersistedValue;
+            this.prepersistedValue = null;
+        }
+        this.BeingEdited = false;
+    }
+
+    public toJSON() {
+        return {
+            Value: this.Value
+        }
     }
 }
 
@@ -25,11 +75,30 @@ class JobSearchItem {
     EmployerName: DataItem;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
-            updatedDate: string = dateToString(new Date()), employerName: string = "") {
+        updatedDate: string = dateToString(new Date()), employerName: string = "") {
         this.Id = id;
         this.StartDate = new DataItem(startDate, false);
         this.UpdatedDate = new DataItem(updatedDate, false);
         this.EmployerName = new DataItem(employerName, false);
+    }
+
+    public PrepareToPersist(): void {
+        this.StartDate.PrepareToPersist();
+        this.UpdatedDate.PrepareToPersist();
+        this.EmployerName.PrepareToPersist();
+    }
+
+    get IsDirty(): boolean {
+        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges;
+    }
+
+    public toJSON() {
+        return {
+            Id: this.Id,
+            StartDate: this.StartDate,
+            UpdatedDate: this.UpdatedDate,
+            EmployerName: this.EmployerName
+        }
     }
 }
 
@@ -42,12 +111,25 @@ class JobSearchViewModel {
 
     constructor() {
         this.nextRowId = 0;
-        let storedJobSearchData: string|null = localStorage.getItem(storageKey);
-        if (storedJobSearchData != null &&  storedJobSearchData.length > 0) {
-            this.JobSearchData = JSON.parse(storedJobSearchData);
+        this.JobSearchData = [];
+
+        // Load data from localStorage
+        let storedJobSearchData: string | null = localStorage.getItem(storageKey);
+        let largestIdFound: number = 0;
+        if (storedJobSearchData != null && storedJobSearchData.length > 0) {
+            let loadedData: JobSearchItem[] = JSON.parse(storedJobSearchData);
+            loadedData.forEach((row) => {
+                let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value);
+                this.JobSearchData.push(newItem);
+                if (newItem.Id > largestIdFound) {
+                    largestIdFound = newItem.Id;
+                }
+            });
         } else {
             this.JobSearchData = [];
         }
+
+        this.nextRowId = largestIdFound + 1;
     }
 
     public IsEmpty(): boolean {
@@ -56,7 +138,7 @@ class JobSearchViewModel {
 
     public NewSearchRow(): void {
         let currentDate:string = dateToString(new Date());
-        let newRow: JobSearchItem = new JobSearchItem(++this.nextRowId, currentDate, currentDate);
+        let newRow: JobSearchItem = new JobSearchItem(this.nextRowId++, currentDate, currentDate);
         // Make fields ready to edit
         newRow.EmployerName.BeingEdited = true;
         newRow.StartDate.BeingEdited = true;
@@ -81,8 +163,19 @@ class JobSearchViewModel {
         });
     }
 
+    public get PersistableChanges():boolean {
+        let haveChanges: boolean = false;
+        for (let i = 0; i < this.JobSearchData.length && !haveChanges; i++) {
+            haveChanges ||= this.JobSearchData[i].IsDirty; 
+        }
+
+        return haveChanges;
+    }
+
     public Persist(): void {
-        console.log("Persisted!");
+        this.JobSearchData.forEach((eachRow:JobSearchItem) => {
+            eachRow.PrepareToPersist();
+        });
         let serializedData: string = JSON.stringify(this.JobSearchData);
         localStorage.setItem(storageKey, serializedData);
     }
