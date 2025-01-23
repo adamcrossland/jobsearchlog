@@ -30,3 +30,7 @@ tr {
 .detail-kind {
     font-style: italic;
 }
+
+.toplevel-buttons {
+    min-height: 48px;
+}

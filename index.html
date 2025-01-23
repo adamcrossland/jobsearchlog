@@ -14,10 +14,13 @@
 <body>
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata">
-        <div class="summary-page" x-show="!DetailsShown">
-            <button class="button button-outline top-level-button" @click="NewSearchRow()">+ Add</button>
+        <div class="toplevel-buttons">
+            <button class="button button-outline top-level-button"
+                @click="NewSearchRow()" x-show="!DetailsShown">+ Add</button>
             <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
             <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
+        </div>
+        <div class="summary-page" x-show="!DetailsShown">
             <div x-show="IsEmpty()">
                 <h2>No job search activities have been added yet.</h2>
             </div>
