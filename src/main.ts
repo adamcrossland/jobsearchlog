@@ -114,7 +114,11 @@ class JobSearchViewModel {
         this.nextRowId = 0;
         this.rowsHaveBeenDeleted = false;
         this.JobSearchData = [];
+        this.LoadData();
+    }
 
+    public LoadData(): void {
+        this.JobSearchData = [];
         // Load data from localStorage
         let storedJobSearchData: string | null = localStorage.getItem(storageKey);
         let largestIdFound: number = 0;
@@ -127,11 +131,8 @@ class JobSearchViewModel {
                     largestIdFound = newItem.Id;
                 }
             });
-        } else {
-            this.JobSearchData = [];
+            this.nextRowId = largestIdFound + 1;
         }
-
-        this.nextRowId = largestIdFound + 1;
     }
 
     public IsEmpty(): boolean {
@@ -186,6 +187,11 @@ class JobSearchViewModel {
         let serializedData: string = JSON.stringify(this.JobSearchData);
         localStorage.setItem(storageKey, serializedData);
 
+        this.rowsHaveBeenDeleted = false;
+    }
+
+    public Revert(): void {
+        this.LoadData();
         this.rowsHaveBeenDeleted = false;
     }
 
