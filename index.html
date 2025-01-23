@@ -14,70 +14,126 @@
 <body>
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata">
-        <button class="button button-outline top-level-button" @click="NewSearchRow()">+ Add</button>
-        <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
-        <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
-        <div x-show="IsEmpty()">
-            <h2>No job search activities have been added yet.</h2>
+        <div class="toplevel-buttons">
+            <button class="button button-outline top-level-button"
+                @click="NewSearchRow()" x-show="!DetailsShown">+ Add</button>
+            <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
+            <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
         </div>
-        <div class="search-data" x-show="!IsEmpty()">
-            <table id="searches-table" x-cloak>
-                <thead>
-                    <th>
-                        <span>Employer</span>
-                    </th>
-                    <th>
-                        <span>Date Engaged</span>
-                    </th>
-                    <th>
-                        <span>Date Updated</span>
-                    </th>
-                    <th></th>
-                </thead>
-                <tbody>
+        <div class="summary-page" x-show="!DetailsShown">
+            <div x-show="IsEmpty()">
+                <h2>No job search activities have been added yet.</h2>
+            </div>
+            <div class="search-data" x-show="!IsEmpty()">
+                <div class="container" id="searches-table" x-cloak>
+                    <div class="row header-row">
+                        <div class="column">Employer</div>
+                        <div class="column">Date Engaged</div>
+                        <div class="column">Date Updated</div>
+                        <div class="column"></div>
+                        <div class="column"></div>
+                    </div>
+
                     <template x-for="eachSearch in JobSearchData">
-                        <tr x-id="['searchRow']">
-                            <td @click="eachSearch.EmployerName.BeingEdited = true"
+                        <div class="row">
+                            <div class="column" @click="eachSearch.EmployerName.BeingEdited = true"
                                 x-show="!eachSearch.EmployerName.BeingEdited">
                                 <span x-text="eachSearch.EmployerName.Data"></span>
-                            </td>
-                            <td :id="$id('employer-name-input')"
+                            </div>
+                            <div class="column" :id="$id('employer-name-input')"
                                 @keyup.enter="eachSearch.EmployerName.SaveChanges()"
                                 @keydown.tab="eachSearch.EmployerName.SaveChanges()"
                                 @keyup.esc="eachSearch.EmployerName.ResetChanges()"
                                 x-show="eachSearch.EmployerName.BeingEdited">
                                 <input type="text" x-model="eachSearch.EmployerName.Data">
-                            </td>
-                            <td @click="eachSearch.StartDate.BeingEdited = true"
+                            </div>
+                            <div class="column" @click="eachSearch.StartDate.BeingEdited = true"
                                 x-show="!eachSearch.StartDate.BeingEdited">
                                 <span x-text="eachSearch.StartDate.Data"></span>
-                            </td>
-                            <td :id="$id('start-date-input')"
+                            </div>
+                            <div class="column" :id="$id('start-date-input')"
                                 @keyup.enter="eachSearch.StartDate.SaveChanges()"
                                 @keydown.tab="eachSearch.StartDate.SaveChanges()"
                                 @keyup.esc="eachSearch.StartDate.ResetChanges()"
                                 x-show="eachSearch.StartDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.StartDate.Data">
-                            </td>
-                            <td @click="eachSearch.UpdatedDate.BeingEdited = true"
+                            </div>
+                            <div class="column" @click="eachSearch.UpdatedDate.BeingEdited = true"
                                 x-show="!eachSearch.UpdatedDate.BeingEdited">
                                 <span x-text="eachSearch.UpdatedDate.Data"></span>
-                            </td>
-                            <td :id="$id('updated-date-input')"
+                            </div>
+                            <div class="column" :id="$id('updated-date-input')"
                                 @keyup.enter="eachSearch.UpdatedDate.SaveChanges()"
                                 @keydown.tab="eachSearch.UpdatedDate.SaveChanges()"
                                 @keyup.enter="eachSearch.UpdatedDate.ResetChanges()"
                                 x-show="eachSearch.UpdatedDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.UpdatedDate.Data">
-                            </td>
-                            <td>
+                            </div>
+                            <div class="column">
                                 <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">Delete</button>
-                            </td>
-                        </tr>
+                            </div>
+                            <div class="column">
+                                <button class="button button-clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
+                            </div>
+                        </div>
                     </template>
-                </tbody>
-            </table>
+                </div>
+            </div>
         </div>
+        <div class="details-page" x-show="DetailsShown">
+            <div class="details-title">
+                <h2 x-text="DetailsToShow.EmployerName.Data"></h2>
+            </div>
+            <div class="details-close">
+                <button class="button button-clear" @click="DetailsShown = false">Hide Details</button>
+            </div>
+            <div class="contianer">
+                <div class="row detail-buttons">
+                    <div class="column">
+                        <button class="button button-clear" @click="DetailsToShow.AddDetail(1)">Add Note</button>
+                    </div>
+                    <div class="column">
+                        <button class="button button-clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
+                    </div>
+                    <div class="column">
+                        <button class="button button-clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
+                    </div>
+                    <div class="column">
+                        <button class="button button-clear" @click="DetailsToShow.AddDetail(4)">Add State</button>
+                    </div>
+                </div>
+                <div x-show="DetailsToShow.Details.length > 0">
+                    <template x-for="(eachDetail, detailIndex) in DetailsToShow.Details">
+                        <div class="row detail">
+                            <div class="column column-20 detail-kind">
+                                <span x-text="eachDetail.KindText"></span>
+                                <span> on </span>
+                                <span x-text="eachDetail.AddedDate"></span>
+                                <span>:</span>
+                            </div>
+                            <div class="column column-60 detail-content"
+                                x-show="!eachDetail.BeingEdited"
+                                @click="eachDetail.BeingEdited = true">
+                                <span x-text="eachDetail.Data"></span>
+                            </div>
+                            <div class="column column-60 detail-content"
+                                @keyup.enter="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
+                                @keydown.tab="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
+                                @keyup.esc="eachDetail.ResetChanges()"
+                                x-show="eachDetail.BeingEdited">
+                                <input type="text" x-model="eachDetail.Data">
+                            </div>
+                            <div class="column column-10">
+                                <button class="button button-clear row-level-button" @click="DetailsToShow.DeleteDetail(detailIndex)">Delete</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div x-show="DetailsToShow.Details.length == 0">
+                    <h2>No details have been added</h2>
+                </div>       
+            </div>
+        </div>  
     </div>
     <script type="module" src="/src/main.ts"></script>
 </body>

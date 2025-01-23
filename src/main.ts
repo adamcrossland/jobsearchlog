@@ -68,11 +68,57 @@ class DataItem {
     }
 }
 
+enum DetailKind {
+    Unknown = 0,
+    Note,
+    Contact,
+    URL,
+    State
+}
+
+class DetailDataItem extends DataItem {
+    public Kind: DetailKind;
+    public AddedDate: string;
+
+    constructor(newKind:DetailKind = DetailKind.Unknown, value:string = "", addedDate:Date = new Date()) {
+        super(value, false);
+        this.Kind = newKind;
+        this.AddedDate = dateToString(addedDate);
+    }
+
+    public get KindText(): string {
+        let text = "Unknown";
+        switch (this.Kind) {
+            case 1: text = "Note";
+                break;
+            case 2: text = "Contact";
+                break;
+            case 3: text = "URL";
+                break;
+            case 4: text = "State";
+                break;
+        }
+
+        return text;
+    }
+
+    public toJSON() {
+        return {
+            Value: this.Value,
+            Kind: this.Kind,
+            AddedDate: this.AddedDate
+        } 
+    } 
+}
+
 class JobSearchItem {
     Id: number;
     StartDate: DataItem;
     UpdatedDate: DataItem;
     EmployerName: DataItem;
+    DetailsOpen: boolean;
+    Details: DetailDataItem[];
+    DetailsHaveChanged: boolean;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
         updatedDate: string = dateToString(new Date()), employerName: string = "") {
@@ -80,16 +126,44 @@ class JobSearchItem {
         this.StartDate = new DataItem(startDate, false);
         this.UpdatedDate = new DataItem(updatedDate, false);
         this.EmployerName = new DataItem(employerName, false);
+        this.DetailsOpen = false;
+        this.Details = [];
+        this.DetailsHaveChanged = false;
     }
 
     public PrepareToPersist(): void {
         this.StartDate.PrepareToPersist();
         this.UpdatedDate.PrepareToPersist();
         this.EmployerName.PrepareToPersist();
+        this.Details.forEach((eachDetail) => {
+            eachDetail.PrepareToPersist();
+        });
+        this.DetailsHaveChanged = false;
     }
 
     get IsDirty(): boolean {
-        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges;
+        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges || this.DetailsHaveChanged;
+    }
+
+    public AddDetail(detailKind: DetailKind, detailData: string) {
+        let newDetail = new DetailDataItem(detailKind, detailData);
+        newDetail.BeingEdited = true;
+        this.Details.push(newDetail);
+        this.DetailsHaveChanged = true;
+    }
+
+    public SetDetails(rawDetails: DetailDataItem[]) {
+        this.Details = [];
+        rawDetails.forEach((rawDetail: DetailDataItem) => {
+            let newDetail: DetailDataItem = new DetailDataItem(rawDetail.Kind, rawDetail.Value);
+            newDetail.AddedDate = rawDetail.AddedDate;
+            this.Details.push(newDetail);
+        });
+    }
+
+    public DeleteDetail(detailIndex: number) {
+        this.Details.splice(detailIndex, 1);
+        this.DetailsHaveChanged = true;
     }
 
     public toJSON() {
@@ -97,7 +171,8 @@ class JobSearchItem {
             Id: this.Id,
             StartDate: this.StartDate,
             UpdatedDate: this.UpdatedDate,
-            EmployerName: this.EmployerName
+            EmployerName: this.EmployerName,
+            Details: this.Details
         }
     }
 }
@@ -109,10 +184,14 @@ class JobSearchViewModel {
     public JobSearchData: JobSearchItem[];
     private nextRowId: number;
     private rowsHaveBeenDeleted: boolean;
+    public DetailsShown: boolean;
+    public DetailsToShow: JobSearchItem|null;
 
     constructor() {
         this.nextRowId = 0;
         this.rowsHaveBeenDeleted = false;
+        this.DetailsToShow = new JobSearchItem(0);
+        this.DetailsShown = false;
         this.JobSearchData = [];
         this.LoadData();
     }
@@ -126,6 +205,7 @@ class JobSearchViewModel {
             let loadedData: JobSearchItem[] = JSON.parse(storedJobSearchData);
             loadedData.forEach((row) => {
                 let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value);
+                newItem.SetDetails(row.Details);
                 this.JobSearchData.push(newItem);
                 if (newItem.Id > largestIdFound) {
                     largestIdFound = newItem.Id;
