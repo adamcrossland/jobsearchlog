@@ -72,6 +72,8 @@
                             </td>
                             <td>
                                 <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">Delete</button>
+                                <button class="button button-clear row-level-button" x-show="!eachSearch.DetailsOpen" @click="eachSearch.DetailsOpen = !eachSearch.DetailsOpen">Show Details</button>
+                                <button class="button button-clear row-level-button" x-show="eachSearch.DetailsOpen" @click="eachSearch.DetailsOpen = !eachSearch.DetailsOpen">Hide Details</button>
                             </td>
                         </tr>
                     </template>

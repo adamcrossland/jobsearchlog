@@ -73,6 +73,7 @@ class JobSearchItem {
     StartDate: DataItem;
     UpdatedDate: DataItem;
     EmployerName: DataItem;
+    DetailsOpen: boolean;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
         updatedDate: string = dateToString(new Date()), employerName: string = "") {
@@ -80,6 +81,7 @@ class JobSearchItem {
         this.StartDate = new DataItem(startDate, false);
         this.UpdatedDate = new DataItem(updatedDate, false);
         this.EmployerName = new DataItem(employerName, false);
+        this.DetailsOpen = false;
     }
 
     public PrepareToPersist(): void {
