@@ -9,3 +9,7 @@ body {
 tr {
     min-height: 106px !important;
 }
+
+.top-level-button {
+    margin-right: 2em;
+}

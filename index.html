@@ -14,8 +14,8 @@
 <body>
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata">
-        <button class="button button-outline" @click="NewSearchRow()">+ Add</button>
-        <button x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
+        <button class="button button-outline top-level-button" @click="NewSearchRow()">+ Add</button>
+        <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
         <div x-show="IsEmpty()">
             <h2>No job search activities have been added yet.</h2>
         </div>
