@@ -20,7 +20,7 @@
             <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
             <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
         </div>
-        <div class="summary-page" x-show="!DetailsShown">
+        <div class="summary-page" x-show="!DetailsShown" x-transition.duration.100ms>
             <div x-show="IsEmpty()">
                 <h2>No job search activities have been added yet.</h2>
             </div>
@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <div class="details-page" x-show="DetailsShown">
+        <div class="details-page" x-show="DetailsShown" x-transition.duration.100ms>
             <div class="details-title">
                 <h2 x-text="DetailsToShow.EmployerName.Data"></h2>
             </div>
