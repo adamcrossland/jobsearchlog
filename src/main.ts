@@ -161,6 +161,11 @@ class JobSearchItem {
         });
     }
 
+    public DeleteDetail(detailIndex: number) {
+        this.Details.splice(detailIndex, 1);
+        this.DetailsHaveChanged = true;
+    }
+
     public toJSON() {
         return {
             Id: this.Id,

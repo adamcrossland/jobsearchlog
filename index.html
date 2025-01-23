@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 <div x-show="DetailsToShow.Details.length > 0">
-                    <template x-for="eachDetail in DetailsToShow.Details">
+                    <template x-for="(eachDetail, detailIndex) in DetailsToShow.Details">
                         <div class="row detail">
                             <div class="column column-20 detail-kind">
                                 <span x-text="eachDetail.KindText"></span>
@@ -122,6 +122,9 @@
                                 @keyup.esc="eachDetail.ResetChanges()"
                                 x-show="eachDetail.BeingEdited">
                                 <input type="text" x-model="eachDetail.Data">
+                            </div>
+                            <div class="column column-10">
+                                <button class="button button-clear row-level-button" @click="DetailsToShow.DeleteDetail(detailIndex)">Delete</button>
                             </div>
                         </div>
                     </template>
