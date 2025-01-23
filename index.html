@@ -79,7 +79,7 @@
         </div>
         <div class="details-page" x-show="DetailsShown">
             <div class="details-title">
-                <h2 x-text="DetailsToShow.EmployerName.Value"></h2>
+                <h2 x-text="DetailsToShow.EmployerName.Data"></h2>
             </div>
             <div class="details-close">
                 <button class="button button-clear" @click="DetailsShown = false">Hide Details</button>
@@ -104,19 +104,21 @@
                         <div class="row detail">
                             <div class="column column-20 detail-kind">
                                 <span x-text="eachDetail.KindText"></span>
+                                <span> on </span>
+                                <span x-text="eachDetail.AddedDate"></span>
+                                <span>:</span>
                             </div>
-                            <div x-show="!eachDetail.BeingEdited" class="column column-60 detail-content">
+                            <div class="column column-60 detail-content"
+                                x-show="!eachDetail.BeingEdited"
+                                @click="eachDetail.BeingEdited = true">
                                 <span x-text="eachDetail.Data"></span>
                             </div>
                             <div class="column column-60 detail-content"
-                                @keyup.enter="eachDetail.SaveChanges()"
-                                @keydown.tab="eachDetail.SaveChanges()"
+                                @keyup.enter="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
+                                @keydown.tab="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
                                 @keyup.esc="eachDetail.ResetChanges()"
                                 x-show="eachDetail.BeingEdited">
                                 <input type="text" x-model="eachDetail.Data">
-                            </div>
-                            <div class="column column-20 detail-date">
-                                <span x-text="eachDetail.AddedDate"></span>
                             </div>
                         </div>
                     </template>

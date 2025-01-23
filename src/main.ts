@@ -118,7 +118,7 @@ class JobSearchItem {
     EmployerName: DataItem;
     DetailsOpen: boolean;
     Details: DetailDataItem[];
-    private detailsHaveChanged: boolean;
+    DetailsHaveChanged: boolean;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
         updatedDate: string = dateToString(new Date()), employerName: string = "") {
@@ -128,7 +128,7 @@ class JobSearchItem {
         this.EmployerName = new DataItem(employerName, false);
         this.DetailsOpen = false;
         this.Details = [];
-        this.detailsHaveChanged = false;
+        this.DetailsHaveChanged = false;
     }
 
     public PrepareToPersist(): void {
@@ -138,17 +138,27 @@ class JobSearchItem {
         this.Details.forEach((eachDetail) => {
             eachDetail.PrepareToPersist();
         });
+        this.DetailsHaveChanged = false;
     }
 
     get IsDirty(): boolean {
-        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges || this.detailsHaveChanged;
+        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges || this.DetailsHaveChanged;
     }
 
     public AddDetail(detailKind: DetailKind, detailData: string) {
         let newDetail = new DetailDataItem(detailKind, detailData);
         newDetail.BeingEdited = true;
         this.Details.push(newDetail);
-        this.detailsHaveChanged = true;
+        this.DetailsHaveChanged = true;
+    }
+
+    public SetDetails(rawDetails: DetailDataItem[]) {
+        this.Details = [];
+        rawDetails.forEach((rawDetail: DetailDataItem) => {
+            let newDetail: DetailDataItem = new DetailDataItem(rawDetail.Kind, rawDetail.Value);
+            newDetail.AddedDate = rawDetail.AddedDate;
+            this.Details.push(newDetail);
+        });
     }
 
     public toJSON() {
@@ -190,6 +200,7 @@ class JobSearchViewModel {
             let loadedData: JobSearchItem[] = JSON.parse(storedJobSearchData);
             loadedData.forEach((row) => {
                 let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value);
+                newItem.SetDetails(row.Details);
                 this.JobSearchData.push(newItem);
                 if (newItem.Id > largestIdFound) {
                     largestIdFound = newItem.Id;
