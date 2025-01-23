@@ -76,6 +76,37 @@
                                 <button class="button button-clear row-level-button" x-show="eachSearch.DetailsOpen" @click="eachSearch.DetailsOpen = !eachSearch.DetailsOpen">Hide Details</button>
                             </td>
                         </tr>
+                        <tr>
+                            <div class="container">
+                                <div class="row detail-buttons">
+                                    <div class="column">
+                                        <button class="button button-clear">Add Note</button>
+                                    </div>
+                                    <div class="column">
+                                        <button class="button button-clear">Add Contact</button>
+                                    </div>
+                                    <div class="column">
+                                        <button class="button button-clear">Add URL</button>
+                                    </div>
+                                    <div class="column">
+                                        <button class="button button-clear">Add State</button>
+                                    </div>
+                                </div>
+                                <template x-for="eachDetail in eachSearch.Details">
+                                    <div class="row detail">
+                                        <div class="column detail-kind">
+                                            <span x-text="eachDetail.KindText"></span>
+                                        </div>
+                                        <div class="column detail-content">
+                                            <span x-text="eachDetail.Value"></span>
+                                        </div>
+                                        <div class="column detail-date">
+                                            <span x-text="eachDetail.UpdatedDate"></span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </tr>
                     </template>
                 </tbody>
             </table>

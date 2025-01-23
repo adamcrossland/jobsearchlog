@@ -68,12 +68,53 @@ class DataItem {
     }
 }
 
+enum DetailKind {
+    Unknown = 0,
+    Note,
+    Contact,
+    URL,
+    State
+}
+
+class DetailDataItem extends DataItem {
+    public Kind: DetailKind;
+
+    constructor(newKind:DetailKind = DetailKind.Unknown) {
+        super();
+        this.Kind = newKind;
+    }
+
+    public get KindText(): string {
+        let text = "Unknown";
+        switch (this.Kind) {
+            case 1: text = "Note";
+                break;
+            case 2: text = "Contact";
+                break;
+            case 3: text = "URL";
+                break;
+            case 4: text = "State";
+                break;
+        }
+
+        return text;
+    }
+
+    public toJSON() {
+        return {
+            Value: this.Value,
+            Kind: this.Kind
+        } 
+    } 
+}
+
 class JobSearchItem {
     Id: number;
     StartDate: DataItem;
     UpdatedDate: DataItem;
     EmployerName: DataItem;
     DetailsOpen: boolean;
+    Details: DetailDataItem[];
 
     constructor(id: number, startDate: string = dateToString(new Date()),
         updatedDate: string = dateToString(new Date()), employerName: string = "") {
@@ -82,6 +123,7 @@ class JobSearchItem {
         this.UpdatedDate = new DataItem(updatedDate, false);
         this.EmployerName = new DataItem(employerName, false);
         this.DetailsOpen = false;
+        this.Details = [];
     }
 
     public PrepareToPersist(): void {
@@ -99,7 +141,8 @@ class JobSearchItem {
             Id: this.Id,
             StartDate: this.StartDate,
             UpdatedDate: this.UpdatedDate,
-            EmployerName: this.EmployerName
+            EmployerName: this.EmployerName,
+            Details: this.Details
         }
     }
 }
