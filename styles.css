@@ -13,3 +13,16 @@ tr {
 .top-level-button {
     margin-right: 2em;
 }
+
+.header-row {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.details-title {
+    float:left;
+}
+
+.details-close {
+    float: right;
+}

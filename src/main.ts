@@ -78,10 +78,12 @@ enum DetailKind {
 
 class DetailDataItem extends DataItem {
     public Kind: DetailKind;
+    public AddedDate: string;
 
-    constructor(newKind:DetailKind = DetailKind.Unknown) {
-        super();
+    constructor(newKind:DetailKind = DetailKind.Unknown, value:string = "", addedDate:Date = new Date()) {
+        super(value, false);
         this.Kind = newKind;
+        this.AddedDate = dateToString(addedDate);
     }
 
     public get KindText(): string {
@@ -103,7 +105,8 @@ class DetailDataItem extends DataItem {
     public toJSON() {
         return {
             Value: this.Value,
-            Kind: this.Kind
+            Kind: this.Kind,
+            AddedDate: this.AddedDate
         } 
     } 
 }
@@ -115,6 +118,7 @@ class JobSearchItem {
     EmployerName: DataItem;
     DetailsOpen: boolean;
     Details: DetailDataItem[];
+    private detailsHaveChanged: boolean;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
         updatedDate: string = dateToString(new Date()), employerName: string = "") {
@@ -124,16 +128,27 @@ class JobSearchItem {
         this.EmployerName = new DataItem(employerName, false);
         this.DetailsOpen = false;
         this.Details = [];
+        this.detailsHaveChanged = false;
     }
 
     public PrepareToPersist(): void {
         this.StartDate.PrepareToPersist();
         this.UpdatedDate.PrepareToPersist();
         this.EmployerName.PrepareToPersist();
+        this.Details.forEach((eachDetail) => {
+            eachDetail.PrepareToPersist();
+        });
     }
 
     get IsDirty(): boolean {
-        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges;
+        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges || this.detailsHaveChanged;
+    }
+
+    public AddDetail(detailKind: DetailKind, detailData: string) {
+        let newDetail = new DetailDataItem(detailKind, detailData);
+        newDetail.BeingEdited = true;
+        this.Details.push(newDetail);
+        this.detailsHaveChanged = true;
     }
 
     public toJSON() {
@@ -154,10 +169,14 @@ class JobSearchViewModel {
     public JobSearchData: JobSearchItem[];
     private nextRowId: number;
     private rowsHaveBeenDeleted: boolean;
+    public DetailsShown: boolean;
+    public DetailsToShow: JobSearchItem|null;
 
     constructor() {
         this.nextRowId = 0;
         this.rowsHaveBeenDeleted = false;
+        this.DetailsToShow = new JobSearchItem(0);
+        this.DetailsShown = false;
         this.JobSearchData = [];
         this.LoadData();
     }
