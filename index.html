@@ -15,12 +15,12 @@
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata">
         <button class="button button-outline" @click="NewSearchRow()">+ Add</button>
-        <button x-show="PersistableChanges" @click="Persist()">Save</button>
+        <button x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
         <div x-show="IsEmpty()">
             <h2>No job search activities have been added yet.</h2>
         </div>
         <div class="search-data" x-show="!IsEmpty()">
-            <table id="searches-table">
+            <table id="searches-table" x-cloak>
                 <thead>
                     <th>
                         <span>Employer</span>
