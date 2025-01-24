@@ -69,10 +69,10 @@
                                 <input type="date" x-model="eachSearch.StartDate.Data">
                             </div>
                             <div class="column">
-                                <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">Delete</button>
+                                <button class="button button-clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
                             </div>
                             <div class="column">
-                                <button class="button button-clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
+                                <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
                             </div>
                         </div>
                     </template>
