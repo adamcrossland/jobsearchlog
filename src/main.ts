@@ -116,16 +116,19 @@ class JobSearchItem {
     StartDate: DataItem;
     UpdatedDate: DataItem;
     EmployerName: DataItem;
+    JobTitle: DataItem;
     DetailsOpen: boolean;
     Details: DetailDataItem[];
     DetailsHaveChanged: boolean;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
-        updatedDate: string = dateToString(new Date()), employerName: string = "") {
+        updatedDate: string = dateToString(new Date()), employerName: string = "",
+        jobTitle: string = "") {
         this.Id = id;
         this.StartDate = new DataItem(startDate, false);
         this.UpdatedDate = new DataItem(updatedDate, false);
         this.EmployerName = new DataItem(employerName, false);
+        this.JobTitle = new DataItem(jobTitle, false);
         this.DetailsOpen = false;
         this.Details = [];
         this.DetailsHaveChanged = false;
@@ -135,6 +138,7 @@ class JobSearchItem {
         this.StartDate.PrepareToPersist();
         this.UpdatedDate.PrepareToPersist();
         this.EmployerName.PrepareToPersist();
+        this.JobTitle.PrepareToPersist();
         this.Details.forEach((eachDetail) => {
             eachDetail.PrepareToPersist();
         });
@@ -166,12 +170,17 @@ class JobSearchItem {
         this.DetailsHaveChanged = true;
     }
 
+    public get EmployerAndJobTitle(): string {
+        return `${this.EmployerName.Data} - ${this.JobTitle.Data}`    
+    }
+
     public toJSON() {
         return {
             Id: this.Id,
             StartDate: this.StartDate,
             UpdatedDate: this.UpdatedDate,
             EmployerName: this.EmployerName,
+            JobTitle: this.JobTitle,
             Details: this.Details
         }
     }
@@ -204,7 +213,7 @@ class JobSearchViewModel {
         if (storedJobSearchData != null && storedJobSearchData.length > 0) {
             let loadedData: JobSearchItem[] = JSON.parse(storedJobSearchData);
             loadedData.forEach((row) => {
-                let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value);
+                let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value, row.JobTitle.Value);
                 newItem.SetDetails(row.Details);
                 this.JobSearchData.push(newItem);
                 if (newItem.Id > largestIdFound) {
@@ -224,8 +233,9 @@ class JobSearchViewModel {
         let newRow: JobSearchItem = new JobSearchItem(this.nextRowId++, currentDate, currentDate);
         // Make fields ready to edit
         newRow.EmployerName.BeingEdited = true;
-        newRow.StartDate.BeingEdited = true;
-        newRow.UpdatedDate.BeingEdited = true;
+        newRow.JobTitle.BeingEdited = true;
+        newRow.StartDate.BeingEdited = false;
+        newRow.UpdatedDate.BeingEdited = false;
         // Add to the top of the aray, so it will be visible to the user with no effort on their part
         this.JobSearchData.unshift(newRow);
 

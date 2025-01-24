@@ -27,11 +27,10 @@
             <div class="search-data" x-show="!IsEmpty()">
                 <div class="container" id="searches-table" x-cloak>
                     <div class="row header-row">
-                        <div class="column">Employer</div>
-                        <div class="column">Date Engaged</div>
-                        <div class="column">Date Updated</div>
-                        <div class="column"></div>
-                        <div class="column"></div>
+                        <div class="column column-20">Employer</div>
+                        <div class="column column-20">Job Title</div>
+                        <div class="column column-10"></div>
+                        <div class="column column-20"></div>
                     </div>
 
                     <template x-for="eachSearch in JobSearchData">
@@ -47,6 +46,17 @@
                                 x-show="eachSearch.EmployerName.BeingEdited">
                                 <input type="text" x-model="eachSearch.EmployerName.Data">
                             </div>
+                            <div class="column" @click="eachSearch.JobTitle.BeingEdited = true"
+                                x-show="!eachSearch.JobTitle.BeingEdited">
+                                <span x-text="eachSearch.JobTitle.Data"></span>
+                            </div>
+                            <div class="column" :id="$id('updated-date-input')"
+                                @keyup.enter="eachSearch.JobTitle.SaveChanges()"
+                                @keydown.tab="eachSearch.JobTitle.SaveChanges()"
+                                @keyup.esc="eachSearch.JobTitle.ResetChanges()"
+                                x-show="eachSearch.JobTitle.BeingEdited">
+                                <input type="text" x-model="eachSearch.JobTitle.Data">
+                            </div>
                             <div class="column" @click="eachSearch.StartDate.BeingEdited = true"
                                 x-show="!eachSearch.StartDate.BeingEdited">
                                 <span x-text="eachSearch.StartDate.Data"></span>
@@ -57,17 +67,6 @@
                                 @keyup.esc="eachSearch.StartDate.ResetChanges()"
                                 x-show="eachSearch.StartDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.StartDate.Data">
-                            </div>
-                            <div class="column" @click="eachSearch.UpdatedDate.BeingEdited = true"
-                                x-show="!eachSearch.UpdatedDate.BeingEdited">
-                                <span x-text="eachSearch.UpdatedDate.Data"></span>
-                            </div>
-                            <div class="column" :id="$id('updated-date-input')"
-                                @keyup.enter="eachSearch.UpdatedDate.SaveChanges()"
-                                @keydown.tab="eachSearch.UpdatedDate.SaveChanges()"
-                                @keyup.enter="eachSearch.UpdatedDate.ResetChanges()"
-                                x-show="eachSearch.UpdatedDate.BeingEdited">
-                                <input type="date" x-model="eachSearch.UpdatedDate.Data">
                             </div>
                             <div class="column">
                                 <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">Delete</button>
@@ -82,7 +81,7 @@
         </div>
         <div class="details-page" x-show="DetailsShown" x-transition.duration.100ms>
             <div class="details-title">
-                <h2 x-text="DetailsToShow.EmployerName.Data"></h2>
+                <h2 x-text="DetailsToShow.EmployerAndJobTitle"></h2>
             </div>
             <div class="details-close">
                 <button class="button button-clear" @click="DetailsShown = false">Hide Details</button>
