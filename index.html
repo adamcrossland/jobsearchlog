@@ -17,8 +17,33 @@
         <div class="toplevel-buttons">
             <button class="button button-outline top-level-button"
                 @click="NewSearchRow()" x-show="!DetailsShown">+ Add</button>
-            <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
-            <button class="top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
+            <button class="button top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
+            <button class="button top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
+            <button class="button button-clear top-level-button"
+                x-cloak x-show="!SettingsShown" @click="SettingsShown = true">Show Settings</button>
+            <button class="button button-clear top-level-button"
+                x-cloak x-show="SettingsShown" @click="SettingsShown = false">Hide Settings</button>
+        </div>
+        <div class="settings" x-show="SettingsShown" x-transition.duration.100ms>
+            <div class="container">
+                <div class="row">
+                    <div class="column column-10"><label for="currentSortOrder">Sort:</label></div>
+                    <div class="column column-40">
+                        <select id="currentSortOrder" x-model="CurrentSortOrder">
+                            <option value="1">By Date Descending</options>
+                            <option value="2">By Date Ascending</options>
+                            <option value="3">Active First, then by Date Descending</options>
+                            <option value="4">Active First, then by Date Descending</options>
+                        </select>
+                    </div>
+                    <div class="column column-20">
+                        <button class="button button-20"
+                            x-show="!CurrentSortIsDefault"
+                            @click="SetCurrentSortAsDefault">Set as Default</button>
+                        <span x-show="CurrentSortIsDefault">Default</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="summary-page" x-show="!DetailsShown" x-transition.duration.100ms>
             <div x-show="IsEmpty()">
@@ -82,7 +107,7 @@
                     </template>
                 </div>
             </div>
-        </div>
+        </div> <!-- End of Summary screen-->
         <div class="details-page" x-show="DetailsShown" x-transition.duration.100ms>
             <div class="clear-fix">
                 <div class="details-title">
@@ -138,7 +163,7 @@
                     <h2>No details have been added</h2>
                 </div>       
             </div>
-        </div>  
+        </div> <!-- End of Details screen -->
     </div>
     <script type="module" src="/src/main.ts"></script>
 </body>

@@ -1,6 +1,8 @@
 import Alpine from 'alpinejs'
 import { dateToString } from './conversions'
 import { DetailDataItem, DetailKind, DataItem} from "./DataItems"
+import Settings from "./Settings"
+import { SortOrder } from './Sorting'
 
 // suggested in the Alpine docs:
 // make Alpine on window available for better DX
@@ -98,12 +100,14 @@ class JobSearchItem {
 const storageKey: string = "jobSearchData";
 
 class JobSearchViewModel {
-    
     public JobSearchData: JobSearchItem[];
     private nextRowId: number;
     private rowsHaveBeenDeleted: boolean;
     public DetailsShown: boolean;
     public DetailsToShow: JobSearchItem|null;
+    public Settings: Settings;
+    public CurrentSortOrder: SortOrder = SortOrder.Unknown;
+    public SettingsShown: boolean;
 
     constructor() {
         this.nextRowId = 0;
@@ -112,6 +116,9 @@ class JobSearchViewModel {
         this.DetailsShown = false;
         this.JobSearchData = [];
         this.LoadData();
+        this.Settings = Settings.LoadSettings();
+        this.CurrentSortOrder = this.Settings.DefaultSortOrder;
+        this.SettingsShown = false;
     }
 
     public LoadData(): void {
@@ -172,6 +179,8 @@ class JobSearchViewModel {
             haveChanges = true;
         }
 
+        haveChanges ||= this.Settings.IsDirty;
+
         for (let i = 0; i < this.JobSearchData.length && !haveChanges; i++) {
             haveChanges ||= this.JobSearchData[i].IsDirty;
         }
@@ -192,11 +201,15 @@ class JobSearchViewModel {
         this.JobSearchData.forEach((eachRow:JobSearchItem) => {
             eachRow.AfterPersisting();
         });
+
+        this.Settings.Persist();
+        this.Settings?.AfterPersisting();
     }
 
     public Revert(): void {
         this.LoadData();
         this.rowsHaveBeenDeleted = false;
+        this.Settings.Revert();
     }
 
     public Delete(id: number) {
@@ -210,6 +223,14 @@ class JobSearchViewModel {
             this.JobSearchData.splice(indexToDelete, 1);
             this.rowsHaveBeenDeleted = true;
         }
+    }
+
+    get CurrentSortIsDefault(): boolean {
+        return this.CurrentSortOrder == this.Settings?.DefaultSortOrder;
+    }
+
+    SetCurrentSortAsDefault() {
+        this.Settings.DefaultSortOrder = this.CurrentSortOrder;
     }
 }
 

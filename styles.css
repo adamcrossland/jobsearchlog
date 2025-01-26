@@ -39,3 +39,7 @@ tr {
     font-weight: bold;
     font-size: x-large;
 }
+
+.settings {
+    border-bottom: 2px dashed black;
+}
