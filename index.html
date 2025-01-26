@@ -84,11 +84,13 @@
             </div>
         </div>
         <div class="details-page" x-show="DetailsShown" x-transition.duration.100ms>
-            <div class="details-title">
-                <h2 x-text="DetailsToShow.EmployerAndJobTitle"></h2>
-            </div>
-            <div class="details-close">
-                <button class="button button-clear" @click="DetailsShown = false">Hide Details</button>
+            <div class="clear-fix">
+                <div class="details-title">
+                    <span class="details-title" x-text="DetailsToShow.EmployerAndJobTitle"></span>
+                </div>
+                <div class="details-close">
+                    <button class="button button-clear" @click="DetailsShown = false">Hide Details</button>
+                </div>
             </div>
             <div class="contianer">
                 <div class="row detail-buttons">

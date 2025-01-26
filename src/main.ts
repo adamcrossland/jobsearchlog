@@ -75,7 +75,11 @@ class JobSearchItem {
     }
 
     public get EmployerAndJobTitle(): string {
-        return `${this.EmployerName.Data} - ${this.JobTitle.Data}`    
+        let result: string = `${this.EmployerName.Data} - ${this.JobTitle.Data}`;
+        if (!this.Open) {
+            result += '- Inactive';
+        }
+        return result;
     }
 
     public toJSON() {
