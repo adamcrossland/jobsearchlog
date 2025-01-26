@@ -1,115 +1,10 @@
 import Alpine from 'alpinejs'
+import { dateToString } from './conversions'
+import { DetailDataItem, DetailKind, DataItem} from "./DataItems"
 
 // suggested in the Alpine docs:
 // make Alpine on window available for better DX
 window.Alpine = Alpine
-
-function dateToString(dateToConvert: Date): string {
-    return dateToConvert.toISOString().split('T')[0];
-}
-
-class DataItem {
-    public Value: string;
-    public BeingEdited: boolean;
-
-    private tempValue: string|null;
-    private prepersistedValue: string | null;
-
-    constructor(value: string = "", beingEdited: boolean = false) {
-        this.Value = value;
-        this.tempValue = null;
-        this.prepersistedValue = null;
-        this.BeingEdited = beingEdited;
-    }
-
-    public SaveChanges(): void {
-        if (this.tempValue != null && this.tempValue != this.Value) {
-            this.prepersistedValue = this.tempValue;
-            this.tempValue = null;
-            this.BeingEdited = false;
-        }
-    }
-
-    public ResetChanges(): void {
-        this.tempValue = null;
-        this.BeingEdited = false;
-    }
-
-    public get Data(): string {
-        if (this.tempValue != null) {
-            return this.tempValue;
-        } else if (this.prepersistedValue != null) {
-            return this.prepersistedValue;
-        }
-
-        return this.Value;
-    }
-
-    public set Data(newValue: string) {
-        this.tempValue = newValue;
-    }
-
-    get HasChanges(): boolean {
-        return this.prepersistedValue != null;
-    }
-
-    public PrepareToPersist() {
-        if (this.prepersistedValue != null) {
-            this.Value = this.prepersistedValue;
-            this.prepersistedValue = null;
-        }
-        this.BeingEdited = false;
-    }
-
-    public toJSON() {
-        return {
-            Value: this.Value
-        }
-    }
-}
-
-enum DetailKind {
-    Unknown = 0,
-    Note,
-    Contact,
-    URL,
-    State
-}
-
-class DetailDataItem extends DataItem {
-    public Kind: DetailKind;
-    public AddedDate: string;
-
-    constructor(newKind:DetailKind = DetailKind.Unknown, value:string = "", addedDate:Date = new Date()) {
-        super(value, false);
-        this.Kind = newKind;
-        this.AddedDate = dateToString(addedDate);
-    }
-
-    public get KindText(): string {
-        let text = "Unknown";
-        switch (this.Kind) {
-            case 1: text = "Note";
-                break;
-            case 2: text = "Contact";
-                break;
-            case 3: text = "URL";
-                break;
-            case 4: text = "State";
-                break;
-        }
-
-        return text;
-    }
-
-    public toJSON() {
-        return {
-            Value: this.Value,
-            Kind: this.Kind,
-            AddedDate: this.AddedDate
-        } 
-    } 
-}
 
 class JobSearchItem {
     Id: number;
@@ -120,10 +15,12 @@ class JobSearchItem {
     DetailsOpen: boolean;
     Details: DetailDataItem[];
     DetailsHaveChanged: boolean;
+    Open: boolean;
+    private origOpen: boolean;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
         updatedDate: string = dateToString(new Date()), employerName: string = "",
-        jobTitle: string = "") {
+        jobTitle: string = "", isOpen: boolean = true) {
         this.Id = id;
         this.StartDate = new DataItem(startDate, false);
         this.UpdatedDate = new DataItem(updatedDate, false);
@@ -132,6 +29,8 @@ class JobSearchItem {
         this.DetailsOpen = false;
         this.Details = [];
         this.DetailsHaveChanged = false;
+        this.Open = isOpen;
+        this.origOpen = isOpen;
     }
 
     public PrepareToPersist(): void {
@@ -145,8 +44,13 @@ class JobSearchItem {
         this.DetailsHaveChanged = false;
     }
 
+    public AfterPersisting(): void {
+        this.origOpen = this.Open;    
+    }
+
     get IsDirty(): boolean {
-        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges || this.DetailsHaveChanged;
+        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges
+            || this.DetailsHaveChanged || this.Open != this.origOpen;
     }
 
     public AddDetail(detailKind: DetailKind, detailData: string) {
@@ -171,7 +75,11 @@ class JobSearchItem {
     }
 
     public get EmployerAndJobTitle(): string {
-        return `${this.EmployerName.Data} - ${this.JobTitle.Data}`    
+        let result: string = `${this.EmployerName.Data} - ${this.JobTitle.Data}`;
+        if (!this.Open) {
+            result += '- Inactive';
+        }
+        return result;
     }
 
     public toJSON() {
@@ -181,7 +89,8 @@ class JobSearchItem {
             UpdatedDate: this.UpdatedDate,
             EmployerName: this.EmployerName,
             JobTitle: this.JobTitle,
-            Details: this.Details
+            Details: this.Details,
+            Open: this.Open
         }
     }
 }
@@ -213,7 +122,7 @@ class JobSearchViewModel {
         if (storedJobSearchData != null && storedJobSearchData.length > 0) {
             let loadedData: JobSearchItem[] = JSON.parse(storedJobSearchData);
             loadedData.forEach((row) => {
-                let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value, row.JobTitle.Value);
+                let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value, row.JobTitle.Value, row.Open);
                 newItem.SetDetails(row.Details);
                 this.JobSearchData.push(newItem);
                 if (newItem.Id > largestIdFound) {
@@ -274,10 +183,15 @@ class JobSearchViewModel {
         this.JobSearchData.forEach((eachRow:JobSearchItem) => {
             eachRow.PrepareToPersist();
         });
+
         let serializedData: string = JSON.stringify(this.JobSearchData);
         localStorage.setItem(storageKey, serializedData);
 
         this.rowsHaveBeenDeleted = false;
+
+        this.JobSearchData.forEach((eachRow:JobSearchItem) => {
+            eachRow.AfterPersisting();
+        });
     }
 
     public Revert(): void {

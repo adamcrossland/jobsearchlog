@@ -72,6 +72,10 @@
                                 <button class="button button-clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
                             </div>
                             <div class="column">
+                                <button x-show="!eachSearch.Open" @click="eachSearch.Open = true" class="button button-clear row-level-button">Activate</button>
+                                <button x-show="eachSearch.Open" @click="eachSearch.Open = false" class="button button-clear row-level-button">Deactivate</button>
+                            </div>
+                            <div class="column">
                                 <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
                             </div>
                         </div>
@@ -80,11 +84,13 @@
             </div>
         </div>
         <div class="details-page" x-show="DetailsShown" x-transition.duration.100ms>
-            <div class="details-title">
-                <h2 x-text="DetailsToShow.EmployerAndJobTitle"></h2>
-            </div>
-            <div class="details-close">
-                <button class="button button-clear" @click="DetailsShown = false">Hide Details</button>
+            <div class="clear-fix">
+                <div class="details-title">
+                    <span class="details-title" x-text="DetailsToShow.EmployerAndJobTitle"></span>
+                </div>
+                <div class="details-close">
+                    <button class="button button-clear" @click="DetailsShown = false">Hide Details</button>
+                </div>
             </div>
             <div class="contianer">
                 <div class="row detail-buttons">
