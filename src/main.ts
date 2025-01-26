@@ -16,6 +16,7 @@ class JobSearchItem {
     Details: DetailDataItem[];
     DetailsHaveChanged: boolean;
     Open: boolean;
+    private origOpen: boolean;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
         updatedDate: string = dateToString(new Date()), employerName: string = "",
@@ -29,6 +30,7 @@ class JobSearchItem {
         this.Details = [];
         this.DetailsHaveChanged = false;
         this.Open = isOpen;
+        this.origOpen = isOpen;
     }
 
     public PrepareToPersist(): void {
@@ -42,8 +44,13 @@ class JobSearchItem {
         this.DetailsHaveChanged = false;
     }
 
+    public AfterPersisting(): void {
+        this.origOpen = this.Open;    
+    }
+
     get IsDirty(): boolean {
-        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges || this.DetailsHaveChanged;
+        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges
+            || this.DetailsHaveChanged || this.Open != this.origOpen;
     }
 
     public AddDetail(detailKind: DetailKind, detailData: string) {
@@ -111,7 +118,7 @@ class JobSearchViewModel {
         if (storedJobSearchData != null && storedJobSearchData.length > 0) {
             let loadedData: JobSearchItem[] = JSON.parse(storedJobSearchData);
             loadedData.forEach((row) => {
-                let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value, row.JobTitle.Value, row.Open || true);
+                let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value, row.JobTitle.Value, row.Open);
                 newItem.SetDetails(row.Details);
                 this.JobSearchData.push(newItem);
                 if (newItem.Id > largestIdFound) {
@@ -172,10 +179,15 @@ class JobSearchViewModel {
         this.JobSearchData.forEach((eachRow:JobSearchItem) => {
             eachRow.PrepareToPersist();
         });
+
         let serializedData: string = JSON.stringify(this.JobSearchData);
         localStorage.setItem(storageKey, serializedData);
 
         this.rowsHaveBeenDeleted = false;
+
+        this.JobSearchData.forEach((eachRow:JobSearchItem) => {
+            eachRow.AfterPersisting();
+        });
     }
 
     public Revert(): void {
