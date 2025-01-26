@@ -72,6 +72,10 @@
                                 <button class="button button-clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
                             </div>
                             <div class="column">
+                                <button x-show="!eachSearch.Open" @click="eachSearch.Open = true" class="button button-clear row-level-button">Activate</button>
+                                <button x-show="eachSearch.Open" @click="eachSearch.Open = false" class="button button-clear row-level-button">Deactivate</button>
+                            </div>
+                            <div class="column">
                                 <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
                             </div>
                         </div>
