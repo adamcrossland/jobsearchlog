@@ -74,33 +74,33 @@
 
                     <template x-for="eachSearch in CurrentView" :key="eachSearch.Id">
                         <div class="row">
-                            <div class="column" @click="eachSearch.EmployerName.BeingEdited = true"
+                            <div class="column column-20 summary-info" @click="eachSearch.EmployerName.BeingEdited = true"
                                 x-show="!eachSearch.EmployerName.BeingEdited">
-                                <span x-text="eachSearch.EmployerName.Data"></span>
+                                <span class="summary-info" x-text="eachSearch.EmployerName.Data"></span>
                             </div>
-                            <div class="column" :id="$id('employer-name-input')"
+                            <div class="column column-20" :id="$id('employer-name-input')"
                                 @keyup.enter="eachSearch.EmployerName.SaveChanges()"
                                 @keydown.tab="eachSearch.EmployerName.SaveChanges()"
                                 @keyup.esc="eachSearch.EmployerName.ResetChanges()"
                                 x-show="eachSearch.EmployerName.BeingEdited">
                                 <input type="text" x-model="eachSearch.EmployerName.Data">
                             </div>
-                            <div class="column" @click="eachSearch.JobTitle.BeingEdited = true"
+                            <div class="column column-20 summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
                                 x-show="!eachSearch.JobTitle.BeingEdited">
-                                <span x-text="eachSearch.JobTitle.Data"></span>
+                                <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
                             </div>
-                            <div class="column" :id="$id('updated-date-input')"
+                            <div class="column column-20 summary-info" :id="$id('updated-date-input')"
                                 @keyup.enter="eachSearch.JobTitle.SaveChanges()"
                                 @keydown.tab="eachSearch.JobTitle.SaveChanges()"
                                 @keyup.esc="eachSearch.JobTitle.ResetChanges()"
                                 x-show="eachSearch.JobTitle.BeingEdited">
                                 <input type="text" x-model="eachSearch.JobTitle.Data">
                             </div>
-                            <div class="column" @click="eachSearch.StartDate.BeingEdited = true"
+                            <div class="column column-10" @click="eachSearch.StartDate.BeingEdited = true"
                                 x-show="!eachSearch.StartDate.BeingEdited">
                                 <span x-text="eachSearch.StartDate.Data"></span>
                             </div>
-                            <div class="column" :id="$id('start-date-input')"
+                            <div class="column column-10" :id="$id('start-date-input')"
                                 @keyup.enter="eachSearch.StartDate.SaveChanges()"
                                 @keydown.tab="eachSearch.StartDate.SaveChanges()"
                                 @keyup.esc="eachSearch.StartDate.ResetChanges()"

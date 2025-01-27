@@ -43,3 +43,9 @@ tr {
 .settings {
     border-bottom: 2px dashed black;
 }
+
+.summary-info {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: clip;
+}
