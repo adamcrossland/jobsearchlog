@@ -221,6 +221,9 @@ class JobSearchViewModel {
 
         this.Settings.Persist();
         this.Settings?.AfterPersisting();
+
+        // After persisting, sort so that any new rows appear where they should
+        this.sortView(this.CurrentSortOrder);
     }
 
     public Revert(): void {
@@ -240,6 +243,10 @@ class JobSearchViewModel {
             this.JobSearchData.splice(indexToDelete, 1);
             this.rowsHaveBeenDeleted = true;
         }
+
+        // We need to make sure that CurrentView is updated to show that the row
+        // has been removed.
+        this.refreshCurrentView();
     }
 
     get CurrentSortIsDefault(): boolean {
@@ -251,7 +258,14 @@ class JobSearchViewModel {
     }
 
     private populateCurrentView() {
-        this.CurrentView = [...this.JobSearchData];
+        let startDate: string = this.Settings?.ShowDateRangeBegin || "1970-01-01";
+        let endDate: string = this.Settings?.ShowDateRangeEnd || dateToString(new Date());
+        this.CurrentView = [];
+        this.JobSearchData.forEach((row) => {
+            if (row.StartDate.Data >= startDate && row.StartDate.Data <= endDate) {
+                this.CurrentView.push(row);
+            }
+        });
     }
 
     private sortView(order:SortOrder) {
@@ -328,6 +342,33 @@ class JobSearchViewModel {
     set CurrentSortOrder(newSortOrder: SortOrder) {
         this.currentSortOrder = newSortOrder;
         this.sortView(this.currentSortOrder);
+    }
+
+    refreshCurrentView() {
+        this.populateCurrentView();
+        this.sortView(this.CurrentSortOrder);
+    }
+
+    get FilterDateBegin(): string {
+        return this.Settings?.ShowDateRangeBegin || "1970-01-01";
+    }
+
+    set FilterDateBegin(newDate: string) {
+        if (this.Settings != null) {
+            this.Settings.ShowDateRangeBegin = newDate;
+            this.refreshCurrentView();
+        }
+    }
+
+    get FilterDateEnd(): string {
+        return this.Settings?.ShowDateRangeEnd || dateToString(new Date());
+    }
+
+    set FilterDateEnd(newDate: string) {
+        if (this.Settings != null) {
+            this.Settings.ShowDateRangeEnd = newDate;
+            this.refreshCurrentView();
+        }
     }
 }
 
