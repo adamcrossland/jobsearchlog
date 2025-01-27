@@ -29,11 +29,11 @@
                 <div class="row">
                     <div class="column column-10"><label for="currentSortOrder">Sort:</label></div>
                     <div class="column column-40">
-                        <select id="currentSortOrder" x-model="CurrentSortOrder">
-                            <option value="1">By Date Descending</options>
-                            <option value="2">By Date Ascending</options>
-                            <option value="3">Active First, then by Date Descending</options>
-                            <option value="4">Active First, then by Date Descending</options>
+                        <select id="currentSortOrder" x-model.number="CurrentSortOrder">
+                            <option value=1>By Date Descending</options>
+                            <option value=2>By Date Ascending</options>
+                            <option value=3>Active First, then by Date Descending</options>
+                            <option value=4>Active First, then by Date Ascending</options>
                         </select>
                     </div>
                     <div class="column column-20">
@@ -58,7 +58,7 @@
                         <div class="column column-20"></div>
                     </div>
 
-                    <template x-for="eachSearch in JobSearchData">
+                    <template x-for="eachSearch in CurrentView" :key="eachSearch.Id">
                         <div class="row">
                             <div class="column" @click="eachSearch.EmployerName.BeingEdited = true"
                                 x-show="!eachSearch.EmployerName.BeingEdited">

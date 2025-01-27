@@ -1,4 +1,3 @@
-import { raw } from "alpinejs";
 import { SortOrder } from "./Sorting";
 import { dateToString } from "./conversions";
 

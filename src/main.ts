@@ -106,8 +106,9 @@ class JobSearchViewModel {
     public DetailsShown: boolean;
     public DetailsToShow: JobSearchItem|null;
     public Settings: Settings;
-    public CurrentSortOrder: SortOrder = SortOrder.Unknown;
+    private currentSortOrder: SortOrder = SortOrder.Unknown;
     public SettingsShown: boolean;
+    public CurrentView: JobSearchItem[] = [];
 
     constructor() {
         this.nextRowId = 0;
@@ -116,8 +117,10 @@ class JobSearchViewModel {
         this.DetailsShown = false;
         this.JobSearchData = [];
         this.LoadData();
+        this.populateCurrentView();
         this.Settings = Settings.LoadSettings();
-        this.CurrentSortOrder = this.Settings.DefaultSortOrder;
+        this.currentSortOrder = this.Settings.DefaultSortOrder;
+        this.sortView(this.currentSortOrder);
         this.SettingsShown = false;
     }
 
@@ -154,6 +157,7 @@ class JobSearchViewModel {
         newRow.UpdatedDate.BeingEdited = false;
         // Add to the top of the aray, so it will be visible to the user with no effort on their part
         this.JobSearchData.unshift(newRow);
+        this.CurrentView.unshift(newRow);
 
         // Not totally sure that this belongs here, but it is convenient.
         // TODO: determine if this is the optimal place to handle setting input focus
@@ -231,6 +235,86 @@ class JobSearchViewModel {
 
     SetCurrentSortAsDefault() {
         this.Settings.DefaultSortOrder = this.CurrentSortOrder;
+    }
+
+    private populateCurrentView() {
+        this.CurrentView = [...this.JobSearchData];
+    }
+
+    private sortView(order:SortOrder) {
+        switch (order) {
+            case 3: // SortOrder.ActiveFirstDateDescending:
+                this.CurrentView.sort((a, b) => {
+                    if (a.Open == b.Open) {
+                        if (a.StartDate.Data < b.StartDate.Data) {
+                            return 1;
+                        } else if (a.StartDate.Data > b.StartDate.Data) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    } else {
+                        if (a.Open && !b.Open) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
+                break;
+            case 4: // SortOrder.ActiveFirstDateAscending
+                this.CurrentView.sort((a, b) => {
+                    if (a.Open == b.Open) {
+                        if (a.StartDate.Data < b.StartDate.Data) {
+                            return -1;
+                        } else if (a.StartDate.Data > b.StartDate.Data) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    } else {
+                        if (a.Open && !b.Open) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
+                break;
+            case 2: // SortOrder.DateAscending
+                this.CurrentView.sort((a, b) => {
+                    if (a.StartDate.Data < b.StartDate.Data) {
+                        return -1;
+                    } else if (a.StartDate.Data > b.StartDate.Data) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+                break;
+            default:
+                console.error(`Got an unknown SortOrder value of ${order}; assuming DateDescending`);
+            case 1: // SortOrder.DateDescending
+                this.CurrentView.sort((a, b) => {
+                    if (a.StartDate.Data < b.StartDate.Data) {
+                        return 1;
+                    } else if (a.StartDate.Data > b.StartDate.Data) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                });
+                break;
+        }
+    }
+
+    get CurrentSortOrder(): SortOrder {
+        return this.currentSortOrder;
+    }
+
+    set CurrentSortOrder(newSortOrder: SortOrder) {
+        this.currentSortOrder = newSortOrder;
+        this.sortView(this.currentSortOrder);
     }
 }
 
