@@ -20,9 +20,9 @@
             <button class="button top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
             <button class="button top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
             <button class="button button-clear top-level-button"
-                x-cloak x-show="!SettingsShown" @click="SettingsShown = true">Show Settings</button>
+                x-cloak x-show="!SettingsShown" @click="SettingsShown = true">Sort and Filter</button>
             <button class="button button-clear top-level-button"
-                x-cloak x-show="SettingsShown" @click="SettingsShown = false">Hide Settings</button>
+                x-cloak x-show="SettingsShown" @click="SettingsShown = false">Close</button>
         </div>
         <div class="settings" x-show="SettingsShown" x-transition.duration.100ms>
             <div class="container">
