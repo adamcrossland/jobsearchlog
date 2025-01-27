@@ -230,6 +230,7 @@ class JobSearchViewModel {
         this.LoadData();
         this.rowsHaveBeenDeleted = false;
         this.Settings.Revert();
+        this.refreshCurrentView();
     }
 
     public Delete(id: number) {
