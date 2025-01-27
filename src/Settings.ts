@@ -88,4 +88,12 @@ export default class Settings implements ISettings {
         this.ShowDateRangeBegin = this.origSettings.ShowDateRangeBegin;
         this.ShowDateRangeEnd = this.origSettings.ShowDateRangeEnd;
     }
+
+    get DefaultStartDate(): boolean {
+        if (this.ShowDateRangeBegin == "1970-01-01") {
+            return true;
+        }
+
+        return false;
+    }
 }

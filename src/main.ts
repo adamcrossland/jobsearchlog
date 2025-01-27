@@ -116,9 +116,9 @@ class JobSearchViewModel {
         this.DetailsToShow = new JobSearchItem(0);
         this.DetailsShown = false;
         this.JobSearchData = [];
+        this.Settings = Settings.LoadSettings();
         this.LoadData();
         this.populateCurrentView();
-        this.Settings = Settings.LoadSettings();
         this.currentSortOrder = this.Settings.DefaultSortOrder;
         this.sortView(this.currentSortOrder);
         this.SettingsShown = false;
@@ -140,6 +140,19 @@ class JobSearchViewModel {
                 }
             });
             this.nextRowId = largestIdFound + 1;
+
+            if (this.Settings.DefaultStartDate) {
+                let earliestDate = dateToString(new Date());
+                this.JobSearchData.forEach((row) => {
+                    if (row.StartDate.Data < earliestDate) {
+                        earliestDate = row.StartDate.Data;
+                    }
+                });
+
+                this.Settings.ShowDateRangeBegin = earliestDate;
+                // Don't want to make the user hit Save right away, so automaticallly persist
+                this.Persist();
+            }
         }
     }
 
