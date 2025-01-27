@@ -310,6 +310,7 @@ class JobSearchViewModel {
                 });
                 break;
             case 2: // SortOrder.DateAscending
+                
                 this.CurrentView.sort((a, b) => {
                     if (a.StartDate.Data < b.StartDate.Data) {
                         return -1;
@@ -320,7 +321,8 @@ class JobSearchViewModel {
                     }
                 });
                 break;
-            default:
+            // @ts-ignore
+            default: 
                 console.error(`Got an unknown SortOrder value of ${order}; assuming DateDescending`);
             case 1: // SortOrder.DateDescending
                 this.CurrentView.sort((a, b) => {
