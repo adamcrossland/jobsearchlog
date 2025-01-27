@@ -43,6 +43,20 @@
                         <span x-show="CurrentSortIsDefault">Default</span>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="column column-10">
+                        <label for="showAfterDate">Show After:</label>
+                    </div>
+                    <div class="column column-20">
+                        <input id="showAfterDate" type="date" x-model="Settings.ShowDateRangeBegin">
+                    </div>
+                    <div class="column column-20">
+                        <label for="showBeforeDate" style="text-align:right">Show Before:</label>
+                    </div>
+                    <div class="column column-20">
+                        <input id="showBeforeDate" type="date" x-model="Settings.ShowDateRangeEnd">
+                    </div>
+                </div>
             </div>
         </div>
         <div class="summary-page" x-show="!DetailsShown" x-transition.duration.100ms>
