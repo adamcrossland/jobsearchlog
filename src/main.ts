@@ -1,6 +1,8 @@
 import Alpine from 'alpinejs'
 import { dateToString } from './conversions'
 import { DetailDataItem, DetailKind, DataItem} from "./DataItems"
+import Settings from "./Settings"
+import { SortOrder } from './Sorting'
 
 // suggested in the Alpine docs:
 // make Alpine on window available for better DX
@@ -98,12 +100,15 @@ class JobSearchItem {
 const storageKey: string = "jobSearchData";
 
 class JobSearchViewModel {
-    
     public JobSearchData: JobSearchItem[];
     private nextRowId: number;
     private rowsHaveBeenDeleted: boolean;
     public DetailsShown: boolean;
     public DetailsToShow: JobSearchItem|null;
+    public Settings: Settings;
+    private currentSortOrder: SortOrder = SortOrder.Unknown;
+    public SettingsShown: boolean;
+    public CurrentView: JobSearchItem[] = [];
 
     constructor() {
         this.nextRowId = 0;
@@ -111,7 +116,12 @@ class JobSearchViewModel {
         this.DetailsToShow = new JobSearchItem(0);
         this.DetailsShown = false;
         this.JobSearchData = [];
+        this.Settings = Settings.LoadSettings();
         this.LoadData();
+        this.populateCurrentView();
+        this.currentSortOrder = this.Settings.DefaultSortOrder;
+        this.sortView(this.currentSortOrder);
+        this.SettingsShown = false;
     }
 
     public LoadData(): void {
@@ -130,6 +140,19 @@ class JobSearchViewModel {
                 }
             });
             this.nextRowId = largestIdFound + 1;
+
+            if (this.Settings.DefaultStartDate) {
+                let earliestDate = dateToString(new Date());
+                this.JobSearchData.forEach((row) => {
+                    if (row.StartDate.Data < earliestDate) {
+                        earliestDate = row.StartDate.Data;
+                    }
+                });
+
+                this.Settings.ShowDateRangeBegin = earliestDate;
+                // Don't want to make the user hit Save right away, so automaticallly persist
+                this.Persist();
+            }
         }
     }
 
@@ -147,6 +170,7 @@ class JobSearchViewModel {
         newRow.UpdatedDate.BeingEdited = false;
         // Add to the top of the aray, so it will be visible to the user with no effort on their part
         this.JobSearchData.unshift(newRow);
+        this.CurrentView.unshift(newRow);
 
         // Not totally sure that this belongs here, but it is convenient.
         // TODO: determine if this is the optimal place to handle setting input focus
@@ -172,6 +196,8 @@ class JobSearchViewModel {
             haveChanges = true;
         }
 
+        haveChanges ||= this.Settings.IsDirty;
+
         for (let i = 0; i < this.JobSearchData.length && !haveChanges; i++) {
             haveChanges ||= this.JobSearchData[i].IsDirty;
         }
@@ -192,11 +218,18 @@ class JobSearchViewModel {
         this.JobSearchData.forEach((eachRow:JobSearchItem) => {
             eachRow.AfterPersisting();
         });
+
+        this.Settings.Persist();
+        this.Settings?.AfterPersisting();
+
+        // After persisting, sort so that any new rows appear where they should
+        this.sortView(this.CurrentSortOrder);
     }
 
     public Revert(): void {
         this.LoadData();
         this.rowsHaveBeenDeleted = false;
+        this.Settings.Revert();
     }
 
     public Delete(id: number) {
@@ -209,6 +242,132 @@ class JobSearchViewModel {
         if (indexToDelete > -1) {
             this.JobSearchData.splice(indexToDelete, 1);
             this.rowsHaveBeenDeleted = true;
+        }
+
+        // We need to make sure that CurrentView is updated to show that the row
+        // has been removed.
+        this.refreshCurrentView();
+    }
+
+    get CurrentSortIsDefault(): boolean {
+        return this.CurrentSortOrder == this.Settings?.DefaultSortOrder;
+    }
+
+    SetCurrentSortAsDefault() {
+        this.Settings.DefaultSortOrder = this.CurrentSortOrder;
+    }
+
+    private populateCurrentView() {
+        let startDate: string = this.Settings?.ShowDateRangeBegin || "1970-01-01";
+        let endDate: string = this.Settings?.ShowDateRangeEnd || dateToString(new Date());
+        this.CurrentView = [];
+        this.JobSearchData.forEach((row) => {
+            if (row.StartDate.Data >= startDate && row.StartDate.Data <= endDate) {
+                this.CurrentView.push(row);
+            }
+        });
+    }
+
+    private sortView(order:SortOrder) {
+        switch (order) {
+            case 3: // SortOrder.ActiveFirstDateDescending:
+                this.CurrentView.sort((a, b) => {
+                    if (a.Open == b.Open) {
+                        if (a.StartDate.Data < b.StartDate.Data) {
+                            return 1;
+                        } else if (a.StartDate.Data > b.StartDate.Data) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    } else {
+                        if (a.Open && !b.Open) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
+                break;
+            case 4: // SortOrder.ActiveFirstDateAscending
+                this.CurrentView.sort((a, b) => {
+                    if (a.Open == b.Open) {
+                        if (a.StartDate.Data < b.StartDate.Data) {
+                            return -1;
+                        } else if (a.StartDate.Data > b.StartDate.Data) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    } else {
+                        if (a.Open && !b.Open) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
+                break;
+            case 2: // SortOrder.DateAscending
+                this.CurrentView.sort((a, b) => {
+                    if (a.StartDate.Data < b.StartDate.Data) {
+                        return -1;
+                    } else if (a.StartDate.Data > b.StartDate.Data) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+                break;
+            default:
+                console.error(`Got an unknown SortOrder value of ${order}; assuming DateDescending`);
+            case 1: // SortOrder.DateDescending
+                this.CurrentView.sort((a, b) => {
+                    if (a.StartDate.Data < b.StartDate.Data) {
+                        return 1;
+                    } else if (a.StartDate.Data > b.StartDate.Data) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                });
+                break;
+        }
+    }
+
+    get CurrentSortOrder(): SortOrder {
+        return this.currentSortOrder;
+    }
+
+    set CurrentSortOrder(newSortOrder: SortOrder) {
+        this.currentSortOrder = newSortOrder;
+        this.sortView(this.currentSortOrder);
+    }
+
+    refreshCurrentView() {
+        this.populateCurrentView();
+        this.sortView(this.CurrentSortOrder);
+    }
+
+    get FilterDateBegin(): string {
+        return this.Settings?.ShowDateRangeBegin || "1970-01-01";
+    }
+
+    set FilterDateBegin(newDate: string) {
+        if (this.Settings != null) {
+            this.Settings.ShowDateRangeBegin = newDate;
+            this.refreshCurrentView();
+        }
+    }
+
+    get FilterDateEnd(): string {
+        return this.Settings?.ShowDateRangeEnd || dateToString(new Date());
+    }
+
+    set FilterDateEnd(newDate: string) {
+        if (this.Settings != null) {
+            this.Settings.ShowDateRangeEnd = newDate;
+            this.refreshCurrentView();
         }
     }
 }
