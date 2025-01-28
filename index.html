@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.mgpluscss.com/v1.3.5/css/mgplus.css">
+    <script src="https://cdn.mgpluscss.com/v1.3.5/js/mgplus-dom.js?register_plugins=dropdowns,tabs,modals,collapses"></script>
     <!-- Embed Font -->
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto+Slab">
     <link rel="stylesheet" href="styles.css">
@@ -106,11 +107,29 @@
                                 x-show="eachSearch.StartDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.StartDate.Data">
                             </div>
-                            <div class="grid-cel mg-x6">
+                            <div class="grid-cel mg-x6 mg-m-hidden">
                                 <button class="mg-button mg-button--small mg-button--clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
                                 <button x-show="!eachSearch.Open" @click="eachSearch.Open = true" class="mg-button mg-button--small mg-button--clear row-level-button">Activate</button>
                                 <button x-show="eachSearch.Open" @click="eachSearch.Open = false" class="mg-button mg-button--small mg-button--clear row-level-button">Deactivate</button>
                                 <button class="mg-button mg-button--small mg-button--clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
+                            </div>
+                            <div class="grid-cel mg-x6 mg-m-display">
+                                <button class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">
+                                    <i class="mg-icon mg-icon--m icon-more-inline"></i>
+                                </button>
+                                <button class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="eachSearch.Open = true" x-show="!eachSearch.Open">
+                                    <i class="mg-icon mg-icon--m icon-minus"></i>
+                                </button>
+                                <button class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="eachSearch.Open = false" x-show="eachSearch.Open">
+                                    <i class="mg-icon mg-icon--m icon-plus"></i>
+                                </button>
+                                <button class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="Delete(eachSearch.Id)">
+                                    <i class="mg-icon mg-icon--m icon-close mg-icon--action"></i>
+                                </button>
                             </div>
                         </div>
                     </template>
@@ -127,12 +146,24 @@
                         <button class="mg-button mg-button--small mg-button--clear" @click="DetailsShown = false">Hide Details</button>
                     </div>
                 </div>
-                <div class="mg-row detail-buttons">
+                <div class="mg-row mg-m-hidden detail-buttons">
                     <div class="grid-cel mg-x12">
                         <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(1)">Add Note</button>
                         <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
                         <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
                         <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(4)">Add State</button>
+                    </div>
+                </div>
+                <div class="mg-row mg-m-display detail-buttons">
+                    <div class="mg-col mg-x4" data-toggle="htmlpreview">
+                        <button class="mg-button mg-button--outline mg-collapse mg-icon-collapse"
+                            data-toggle="collapse">Actions</button>
+                        <div class="mg-collapse--content">
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(1)">Add Note</button>
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(4)">Add State</button>    
+                        </div>
                     </div>
                 </div>
                 <div x-show="DetailsToShow.Details.length > 0">
