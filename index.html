@@ -80,7 +80,7 @@
                                 x-show="!eachSearch.EmployerName.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.EmployerName.Data"></span>
                             </div>
-                            <div class="grid-cel mg-x2" :id="$id('employer-name-input')"
+                            <div class="grid-cel mg-x4" :id="$id('employer-name-input')"
                                 @keyup.enter="eachSearch.EmployerName.SaveChanges()"
                                 @keydown.tab="eachSearch.EmployerName.SaveChanges()"
                                 @click.outside="eachSearch.EmployerName.SaveChanges()"
@@ -88,11 +88,11 @@
                                 x-show="eachSearch.EmployerName.BeingEdited">
                                 <input type="text" x-model="eachSearch.EmployerName.Data">
                             </div>
-                            <div class="grid-cel mg-x2 summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
+                            <div class="grid-cel mg-x3 summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
                                 x-show="!eachSearch.JobTitle.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
                             </div>
-                            <div class="grid-cel mg-x2 summary-info" :id="$id('updated-date-input')"
+                            <div class="grid-cel mg-x4 summary-info" :id="$id('updated-date-input')"
                                 @keyup.enter="eachSearch.JobTitle.SaveChanges()"
                                 @keydown.tab="eachSearch.JobTitle.SaveChanges()"
                                 @click.outside="eachSearch.JobTitle.SaveChanges()"
@@ -100,11 +100,11 @@
                                 x-show="eachSearch.JobTitle.BeingEdited">
                                 <input type="text" x-model="eachSearch.JobTitle.Data">
                             </div>
-                            <div class="grid-cel mg-x2" @click="eachSearch.StartDate.BeingEdited = true"
+                            <div class="grid-cel mg-x2 mg-s-hidden" @click="eachSearch.StartDate.BeingEdited = true"
                                 x-show="!eachSearch.StartDate.BeingEdited">
                                 <span x-text="eachSearch.StartDate.Data"></span>
                             </div>
-                            <div class="grid-cel mg-x2" :id="$id('start-date-input')"
+                            <div class="grid-cel mg-x4 mg-s-hidden" :id="$id('start-date-input')"
                                 @keyup.enter="eachSearch.StartDate.SaveChanges()"
                                 @keydown.tab="eachSearch.StartDate.SaveChanges()"
                                 @click.outside="eachSearch.StartDate.SaveChanges()"
@@ -112,7 +112,7 @@
                                 x-show="eachSearch.StartDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.StartDate.Data">
                             </div>
-                            <div class="grid-cel mg-x6 mg-m-hidden">
+                            <div class="grid-cel mg-x4 mg-m-hidden">
                                 <button aria-label="Show Details of Search" class="mg-button mg-button--small mg-button--clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
                                 <button aria-label="Mark Search as Active" class="mg-button mg-button--small mg-button--clear row-level-button" @click="eachSearch.Open = true" x-show="!eachSearch.Open">Activate</button>
                                 <button aria-label="Mark Search as Inactive" class="mg-button mg-button--small mg-button--clear row-level-button" @click="eachSearch.Open = false" x-show="eachSearch.Open">Deactivate</button>
