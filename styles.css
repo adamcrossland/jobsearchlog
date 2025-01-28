@@ -28,6 +28,10 @@ tr {
     font-style: italic;
 }
 
+.detail-buttons {
+    padding-top: 1em;
+}
+
 .detail-buttons button{
     margin-right: .5em;
 }

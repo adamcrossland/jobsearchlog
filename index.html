@@ -148,8 +148,10 @@
                         <span class="details-title" x-text="DetailsToShow.EmployerAndJobTitle"></span>
                     </div>
                     <div class="grid-cel mg-x6 mg-text-center">
-                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsShown = false">Hide Details</button>
+                        <button class="mg-button mg-button--small mg-button--clear"
+                            @click="DetailsShown = false">Hide Details</button>
                     </div>
+                    <div class="grid-cel mg-x12">Applied on <span x-text="DetailsToShow.StartDate.Data"></span></div>
                 </div>
                 <div class="mg-row mg-m-hidden detail-buttons">
                     <div class="grid-cel mg-x12">
