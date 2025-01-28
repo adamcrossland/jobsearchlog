@@ -19,16 +19,25 @@ tr {
     font-size: larger;
 }
 
-.details-title {
-    float:left;
-}
-
-.details-close {
-    float: right;
+.detail {
+    padding-top: .5em;
+    border-bottom: lightgray 2px dotted;
 }
 
 .detail-kind {
     font-style: italic;
+}
+
+.detail-buttons {
+    padding-top: 1em;
+}
+
+.detail-buttons button{
+    margin-right: .5em;
+}
+
+.detail-content span {
+    overflow-wrap: anywhere;
 }
 
 .toplevel-buttons {
@@ -40,6 +49,16 @@ tr {
     font-size: x-large;
 }
 
+.details-employer {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.details-jobtitle {
+    font-weight: bold;
+    font-size: larger;
+}
+
 .settings {
     border-bottom: 2px dashed black;
 }
@@ -48,4 +67,12 @@ tr {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow-x: clip;
+}
+
+.filter-range-lavel {
+    text-align: right;
+}
+
+.input-area {
+    width:80% !important;
 }

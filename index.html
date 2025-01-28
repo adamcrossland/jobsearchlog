@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+    <link rel="stylesheet" href="https://cdn.mgpluscss.com/v1.3.5/css/mgplus.css">
+    <script src="https://cdn.mgpluscss.com/v1.3.5/js/mgplus-dom.js?register_plugins=dropdowns,tabs,modals,collapses"></script>
     <!-- Embed Font -->
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto+Slab">
     <link rel="stylesheet" href="styles.css">
@@ -15,20 +16,22 @@
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata">
         <div class="toplevel-buttons">
-            <button class="button button-outline top-level-button"
+            <button aria-label="Add new search" title="Add Search" class="mg-button mg-button--small mg-button--outline top-level-button"
                 @click="NewSearchRow()" x-show="!DetailsShown">+ Add</button>
-            <button class="button top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
-            <button class="button top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
-            <button class="button button-clear top-level-button"
+            <button aria-label="Save changes" title="Save Changes" class="mg-button mg-button--small top-level-button"
+                x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
+            <button aria-label="Undo changes" title="Undo Changes" class="mg-button mg-button--small top-level-button"
+                x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
+            <button aria-label="Sort and filter options" title="Sort and Filter" class="mg-button mg-button--small top-level-button"
                 x-cloak x-show="!DetailsShown && !SettingsShown" @click="SettingsShown = true">Sort and Filter</button>
-            <button class="button button-clear top-level-button"
+            <button class="mg-button mg-button--small top-level-button"
                 x-cloak x-show="!DetailsShown && SettingsShown" @click="SettingsShown = false">Close</button>
         </div>
         <div class="settings" x-show="SettingsShown" x-transition.duration.100ms>
-            <div class="container">
-                <div class="row">
-                    <div class="column column-10"><label for="currentSortOrder">Sort:</label></div>
-                    <div class="column column-40">
+            <div class="mg-container">
+                <div class="mg-row">
+                    <div class="grid-cel mg-x2"><label for="currentSortOrder">Sort:</label></div>
+                    <div class="grid-cel mg-x6">
                         <select id="currentSortOrder" x-model.number="CurrentSortOrder">
                             <option value=1>By Date Descending</options>
                             <option value=2>By Date Ascending</options>
@@ -36,24 +39,26 @@
                             <option value=4>Active First, then by Date Ascending</options>
                         </select>
                     </div>
-                    <div class="column column-20">
-                        <button class="button button-20"
-                            x-show="!CurrentSortIsDefault"
+                    <div class="grid-cel mg-x4">
+                        <button aria-label="Set sort as the default" title="Set as Default"
+                            class="mg-button mg-button--small mg-button--clear" x-show="!CurrentSortIsDefault"
                             @click="SetCurrentSortAsDefault">Set as Default</button>
                         <span x-show="CurrentSortIsDefault">Default</span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="column column-10">
+                <div class="mg-row">
+                    <div class="grid-cel mg-x2 filter-range-label">
                         <label for="showAfterDate">Show After:</label>
                     </div>
-                    <div class="column column-20">
+                    <div class="grid-cel mg-x8">
                         <input id="showAfterDate" type="date" x-model="FilterDateBegin">
                     </div>
-                    <div class="column column-20">
-                        <label for="showBeforeDate" style="text-align:right">Show Before:</label>
+                </div>
+                <div class="mg-row">
+                    <div class="grid-cel mg-x2 filter-range-label">
+                        <label for="showBeforeDate">Show Before:</label>
                     </div>
-                    <div class="column column-20">
+                    <div class="grid-cel mg-x8">
                         <input id="showBeforeDate" type="date" x-model="FilterDateEnd">
                     </div>
                 </div>
@@ -65,57 +70,95 @@
             </div>
             <div class="search-data" x-show="!IsEmpty()">
                 <div class="container" id="searches-table" x-cloak>
-                    <div class="row header-row">
-                        <div class="column column-20">Employer</div>
-                        <div class="column column-20">Job Title</div>
-                        <div class="column column-10"></div>
-                        <div class="column column-20"></div>
+                    <div class="mg-row mg-s-hidden header-row">
+                        <div class="grid-cel mg-x2">Employer</div>
+                        <div class="grid-cel mg-x2">Job Title</div>
                     </div>
-
                     <template x-for="eachSearch in CurrentView" :key="eachSearch.Id">
-                        <div class="row">
-                            <div class="column column-20 summary-info" @click="eachSearch.EmployerName.BeingEdited = true"
+                        <div class="mg-row">
+                            <div class="grid-cel mg-x2 summary-info" @click="eachSearch.EmployerName.BeingEdited = true"
                                 x-show="!eachSearch.EmployerName.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.EmployerName.Data"></span>
                             </div>
-                            <div class="column column-20" :id="$id('employer-name-input')"
+                            <!-- for larger screens-->
+                            <div class="grid-cel mg-x2 mg-s-hidden summary-info" :id="$id('employer-name-input')"
                                 @keyup.enter="eachSearch.EmployerName.SaveChanges()"
                                 @keydown.tab="eachSearch.EmployerName.SaveChanges()"
+                                @click.outside="eachSearch.EmployerName.SaveChanges()"
                                 @keyup.esc="eachSearch.EmployerName.ResetChanges()"
                                 x-show="eachSearch.EmployerName.BeingEdited">
-                                <input type="text" x-model="eachSearch.EmployerName.Data">
+                                <input class="input-area" type="text" x-model="eachSearch.EmployerName.Data"
+                                    placeholder="Employer">
                             </div>
-                            <div class="column column-20 summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
+                            <!-- For mobile vertical -->
+                            <div class="grid-cel mg-x6 mg-s-display summary-info" :id="$id('employer-name-input')"
+                                @keyup.enter="eachSearch.EmployerName.SaveChanges()"
+                                @keydown.tab="eachSearch.EmployerName.SaveChanges()"
+                                @click.outside="eachSearch.EmployerName.SaveChanges()"
+                                @keyup.esc="eachSearch.EmployerName.ResetChanges()"
+                                x-show="eachSearch.EmployerName.BeingEdited">
+                                <input class="input-area" type="text" x-model="eachSearch.EmployerName.Data"
+                                    placeholder="Employer">
+                            </div>
+                            <div class="grid-cel mg-x2 mg-s-hidden summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
                                 x-show="!eachSearch.JobTitle.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
                             </div>
-                            <div class="column column-20 summary-info" :id="$id('updated-date-input')"
+                            <!-- For larger screens -->
+                            <div class="grid-cel mg-x2 mg-s-hidden summary-info" :id="$id('updated-date-input')"
                                 @keyup.enter="eachSearch.JobTitle.SaveChanges()"
                                 @keydown.tab="eachSearch.JobTitle.SaveChanges()"
+                                @click.outside="eachSearch.JobTitle.SaveChanges()"
                                 @keyup.esc="eachSearch.JobTitle.ResetChanges()"
                                 x-show="eachSearch.JobTitle.BeingEdited">
-                                <input type="text" x-model="eachSearch.JobTitle.Data">
+                                <input class="input-area" type="text" x-model="eachSearch.JobTitle.Data"
+                                    placeholder="Job Title">
                             </div>
-                            <div class="column column-10" @click="eachSearch.StartDate.BeingEdited = true"
+                            <!-- For mobile vertical -->
+                            <div class="grid-cel mg-x6 mg-s-display summary-info" :id="$id('updated-date-input')"
+                                @keyup.enter="eachSearch.JobTitle.SaveChanges()"
+                                @keydown.tab="eachSearch.JobTitle.SaveChanges()"
+                                @click.outside="eachSearch.JobTitle.SaveChanges()"
+                                @keyup.esc="eachSearch.JobTitle.ResetChanges()"
+                                x-show="eachSearch.JobTitle.BeingEdited">
+                                <input class="input-area" type="text" x-model="eachSearch.JobTitle.Data"
+                                    placeholder="Job Title">
+                            </div>
+                            <div class="grid-cel mg-x2 mg-s-hidden" @click="eachSearch.StartDate.BeingEdited = true"
                                 x-show="!eachSearch.StartDate.BeingEdited">
                                 <span x-text="eachSearch.StartDate.Data"></span>
                             </div>
-                            <div class="column column-10" :id="$id('start-date-input')"
+                            <div class="grid-cel mg-x4 mg-s-hidden" :id="$id('start-date-input')"
                                 @keyup.enter="eachSearch.StartDate.SaveChanges()"
                                 @keydown.tab="eachSearch.StartDate.SaveChanges()"
+                                @click.outside="eachSearch.StartDate.SaveChanges()"
                                 @keyup.esc="eachSearch.StartDate.ResetChanges()"
                                 x-show="eachSearch.StartDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.StartDate.Data">
                             </div>
-                            <div class="column">
-                                <button class="button button-clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
+                            <div class="grid-cel mg-x4 mg-m-hidden">
+                                <button aria-label="Show Details of Search" class="mg-button mg-button--small mg-button--clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
+                                <button aria-label="Mark Search as Active" class="mg-button mg-button--small mg-button--clear row-level-button" @click="eachSearch.Open = true" x-show="!eachSearch.Open">Activate</button>
+                                <button aria-label="Mark Search as Inactive" class="mg-button mg-button--small mg-button--clear row-level-button" @click="eachSearch.Open = false" x-show="eachSearch.Open">Deactivate</button>
+                                <button aria-label="Delete Search" class="mg-button mg-button--small mg-button--clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
                             </div>
-                            <div class="column">
-                                <button x-show="!eachSearch.Open" @click="eachSearch.Open = true" class="button button-clear row-level-button">Activate</button>
-                                <button x-show="eachSearch.Open" @click="eachSearch.Open = false" class="button button-clear row-level-button">Deactivate</button>
-                            </div>
-                            <div class="column">
-                                <button class="button button-clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
+                            <div class="grid-cel mg-x6 mg-m-display">
+                                <button aria-label="Show Details of Search" title="Show Details" class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">
+                                    <i class="mg-icon mg-icon--m icon-more-inline"></i>
+                                </button>
+                                <button aria-label="Mark Search as Active" title="Activate" class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="eachSearch.Open = true" x-show="!eachSearch.Open">
+                                    <i class="mg-icon mg-icon--m icon-plus"></i>
+                                </button>
+                                <button aria-label="Mark Search as Inactive" title="Deactivate" class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="eachSearch.Open = false" x-show="eachSearch.Open">
+                                    <i class="mg-icon mg-icon--m icon-minus"></i>
+                                </button>
+                                <button aria-label="Delete Search" title="Delete" class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="Delete(eachSearch.Id)">
+                                    <i class="mg-icon mg-icon--m icon-close mg-icon--action"></i>
+                                </button>
                             </div>
                         </div>
                     </template>
@@ -123,52 +166,66 @@
             </div>
         </div> <!-- End of Summary screen-->
         <div class="details-page" x-show="DetailsShown" x-transition.duration.100ms>
-            <div class="clear-fix">
-                <div class="details-title">
-                    <span class="details-title" x-text="DetailsToShow.EmployerAndJobTitle"></span>
-                </div>
-                <div class="details-close">
-                    <button class="button button-clear" @click="DetailsShown = false">Hide Details</button>
-                </div>
-            </div>
             <div class="contianer">
-                <div class="row detail-buttons">
-                    <div class="column">
-                        <button class="button button-clear" @click="DetailsToShow.AddDetail(1)">Add Note</button>
+                <div class="mg-row">
+                    <div class="grid-cel mg-x6">
+                        <span class="details-employer" x-text="DetailsToShow.EmployerName.Data"></span>
                     </div>
-                    <div class="column">
-                        <button class="button button-clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
+                    <div class="grid-cel mg-x6 mg-text-center">
+                        <button class="mg-button mg-button--small mg-button--clear"
+                            @click="DetailsShown = false">Hide Details</button>
                     </div>
-                    <div class="column">
-                        <button class="button button-clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
+                </div>
+                <div mass="mg-row">
+                    <div class="grid-cel mg-x12"><span class="details-jobtitle" x-text="DetailsToShow.JobTitle.Data"></span></div>
+                </div>
+                <div class="mg-row">
+                    <div class="grid-cel mg-x12">Applied on <span x-text="DetailsToShow.StartDate.Data"></span></div>
+                </div>
+                <div class="mg-row mg-m-hidden detail-buttons">
+                    <div class="grid-cel mg-x12">
+                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(1)">Add Note</button>
+                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
+                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
+                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(4)">Add State</button>
                     </div>
-                    <div class="column">
-                        <button class="button button-clear" @click="DetailsToShow.AddDetail(4)">Add State</button>
+                </div>
+                <div class="mg-row mg-m-display detail-buttons">
+                    <div class="mg-col mg-x4" data-toggle="htmlpreview">
+                        <button class="mg-button mg-button--outline mg-collapse mg-icon-collapse"
+                            data-toggle="collapse">Actions</button>
+                        <div class="mg-collapse--content">
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(1)">Add Note</button>
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(4)">Add State</button>    
+                        </div>
                     </div>
                 </div>
                 <div x-show="DetailsToShow.Details.length > 0">
                     <template x-for="(eachDetail, detailIndex) in DetailsToShow.Details">
-                        <div class="row detail">
-                            <div class="column column-20 detail-kind">
+                        <div class="mg-row detail">
+                            <div class="grid-cel mg-x2 detail-kind">
                                 <span x-text="eachDetail.KindText"></span>
                                 <span> on </span>
                                 <span x-text="eachDetail.AddedDate"></span>
                                 <span>:</span>
                             </div>
-                            <div class="column column-60 detail-content"
+                            <div class="grid-cel mg-x6 detail-content"
                                 x-show="!eachDetail.BeingEdited"
                                 @click="eachDetail.BeingEdited = true">
-                                <span x-text="eachDetail.Data"></span>
+                                <span class="detail-data" x-text="eachDetail.Data"></span>
                             </div>
-                            <div class="column column-60 detail-content"
+                            <div class="grid-cel mg-x6 detail-content"
                                 @keyup.enter="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
                                 @keydown.tab="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
+                                @click.outside="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
                                 @keyup.esc="eachDetail.ResetChanges()"
                                 x-show="eachDetail.BeingEdited">
                                 <input type="text" x-model="eachDetail.Data">
                             </div>
-                            <div class="column column-10">
-                                <button class="button button-clear row-level-button" @click="DetailsToShow.DeleteDetail(detailIndex)">- Delete</button>
+                            <div class="grid-cel mg-x4">
+                                <button aria-label="Delete this detail" title="Delete Detail" class="mg-button mg-button--small mg-button--clear row-level-button" @click="DetailsToShow.DeleteDetail(detailIndex)">- Delete</button>
                             </div>
                         </div>
                     </template>
