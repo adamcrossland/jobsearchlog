@@ -19,16 +19,16 @@ tr {
     font-size: larger;
 }
 
-.details-title {
-    float:left;
-}
-
-.details-close {
-    float: right;
-}
-
 .detail-kind {
     font-style: italic;
+}
+
+.detail-buttons button{
+    margin-right: .5em;
+}
+
+.detail-content span {
+    overflow-wrap: anywhere;
 }
 
 .toplevel-buttons {
@@ -48,4 +48,8 @@ tr {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow-x: clip;
+}
+
+.filter-range-lavel {
+    text-align: right;
 }
