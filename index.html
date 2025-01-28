@@ -16,11 +16,13 @@
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata">
         <div class="toplevel-buttons">
-            <button class="mg-button mg-button--small mg-button--outline top-level-button"
+            <button aria-label="Add new search" title="Add Search" class="mg-button mg-button--small mg-button--outline top-level-button"
                 @click="NewSearchRow()" x-show="!DetailsShown">+ Add</button>
-            <button class="mg-button mg-button--small top-level-button" x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
-            <button class="mg-button mg-button--small top-level-button" x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
-            <button class="mg-button mg-button--small top-level-button"
+            <button aria-label="Save changes" title="Save Changes" class="mg-button mg-button--small top-level-button"
+                x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
+            <button aria-label="Undo changes" title="Undo Changes" class="mg-button mg-button--small top-level-button"
+                x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
+            <button aria-label="Sort and filter options" title="Sort and Filter" class="mg-button mg-button--small top-level-button"
                 x-cloak x-show="!DetailsShown && !SettingsShown" @click="SettingsShown = true">Sort and Filter</button>
             <button class="mg-button mg-button--small top-level-button"
                 x-cloak x-show="!DetailsShown && SettingsShown" @click="SettingsShown = false">Close</button>
@@ -38,8 +40,8 @@
                         </select>
                     </div>
                     <div class="grid-cel mg-x4">
-                        <button class="button"
-                            x-show="!CurrentSortIsDefault"
+                        <button aria-label="Set sort as the default" title="Set as Default"
+                            class="mg-button mg-button--small mg-button--clear" x-show="!CurrentSortIsDefault"
                             @click="SetCurrentSortAsDefault">Set as Default</button>
                         <span x-show="CurrentSortIsDefault">Default</span>
                     </div>
@@ -108,25 +110,25 @@
                                 <input type="date" x-model="eachSearch.StartDate.Data">
                             </div>
                             <div class="grid-cel mg-x6 mg-m-hidden">
-                                <button class="mg-button mg-button--small mg-button--clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
-                                <button x-show="!eachSearch.Open" @click="eachSearch.Open = true" class="mg-button mg-button--small mg-button--clear row-level-button">Activate</button>
-                                <button x-show="eachSearch.Open" @click="eachSearch.Open = false" class="mg-button mg-button--small mg-button--clear row-level-button">Deactivate</button>
-                                <button class="mg-button mg-button--small mg-button--clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
+                                <button aria-label="Show Details of Search" class="mg-button mg-button--small mg-button--clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
+                                <button aria-label="Mark Search as Active" class="mg-button mg-button--small mg-button--clear row-level-button" @click="eachSearch.Open = true" x-show="!eachSearch.Open">Activate</button>
+                                <button aria-label="Mark Search as Inactive" class="mg-button mg-button--small mg-button--clear row-level-button" @click="eachSearch.Open = false" x-show="eachSearch.Open">Deactivate</button>
+                                <button aria-label="Delete Search" class="mg-button mg-button--small mg-button--clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
                             </div>
                             <div class="grid-cel mg-x6 mg-m-display">
-                                <button class="mg-button mg-button--small mg-button--clear row-level-button"
+                                <button aria-label="Show Details of Search" title="Show Details" class="mg-button mg-button--small mg-button--clear row-level-button"
                                     @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">
                                     <i class="mg-icon mg-icon--m icon-more-inline"></i>
                                 </button>
-                                <button class="mg-button mg-button--small mg-button--clear row-level-button"
+                                <button aria-label="Mark Search as Active" title="Activate" class="mg-button mg-button--small mg-button--clear row-level-button"
                                     @click="eachSearch.Open = true" x-show="!eachSearch.Open">
-                                    <i class="mg-icon mg-icon--m icon-minus"></i>
-                                </button>
-                                <button class="mg-button mg-button--small mg-button--clear row-level-button"
-                                    @click="eachSearch.Open = false" x-show="eachSearch.Open">
                                     <i class="mg-icon mg-icon--m icon-plus"></i>
                                 </button>
-                                <button class="mg-button mg-button--small mg-button--clear row-level-button"
+                                <button aria-label="Mark Search as Inactive" title="Deactivate" class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="eachSearch.Open = false" x-show="eachSearch.Open">
+                                    <i class="mg-icon mg-icon--m icon-minus"></i>
+                                </button>
+                                <button aria-label="Delete Search" title="Delete" class="mg-button mg-button--small mg-button--clear row-level-button"
                                     @click="Delete(eachSearch.Id)">
                                     <i class="mg-icon mg-icon--m icon-close mg-icon--action"></i>
                                 </button>
@@ -188,7 +190,7 @@
                                 <input type="text" x-model="eachDetail.Data">
                             </div>
                             <div class="grid-cel mg-x4">
-                                <button class="mg-button mg-button--small mg-button--clear row-level-button" @click="DetailsToShow.DeleteDetail(detailIndex)">- Delete</button>
+                                <button aria-label="Delete this detail" title="Delete Detail" class="mg-button mg-button--small mg-button--clear row-level-button" @click="DetailsToShow.DeleteDetail(detailIndex)">- Delete</button>
                             </div>
                         </div>
                     </template>
