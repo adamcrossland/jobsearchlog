@@ -72,3 +72,7 @@ tr {
 .filter-range-lavel {
     text-align: right;
 }
+
+.input-area {
+    width:80% !important;
+}

@@ -80,25 +80,49 @@
                                 x-show="!eachSearch.EmployerName.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.EmployerName.Data"></span>
                             </div>
-                            <div class="grid-cel mg-x4" :id="$id('employer-name-input')"
+                            <!-- for larger screens-->
+                            <div class="grid-cel mg-x2 mg-s-hidden summary-info" :id="$id('employer-name-input')"
                                 @keyup.enter="eachSearch.EmployerName.SaveChanges()"
                                 @keydown.tab="eachSearch.EmployerName.SaveChanges()"
                                 @click.outside="eachSearch.EmployerName.SaveChanges()"
                                 @keyup.esc="eachSearch.EmployerName.ResetChanges()"
                                 x-show="eachSearch.EmployerName.BeingEdited">
-                                <input type="text" x-model="eachSearch.EmployerName.Data">
+                                <input class="input-area" type="text" x-model="eachSearch.EmployerName.Data"
+                                    placeholder="Employer">
                             </div>
-                            <div class="grid-cel mg-x3 summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
+                            <!-- For mobile vertical -->
+                            <div class="grid-cel mg-x6 mg-s-display summary-info" :id="$id('employer-name-input')"
+                                @keyup.enter="eachSearch.EmployerName.SaveChanges()"
+                                @keydown.tab="eachSearch.EmployerName.SaveChanges()"
+                                @click.outside="eachSearch.EmployerName.SaveChanges()"
+                                @keyup.esc="eachSearch.EmployerName.ResetChanges()"
+                                x-show="eachSearch.EmployerName.BeingEdited">
+                                <input class="input-area" type="text" x-model="eachSearch.EmployerName.Data"
+                                    placeholder="Employer">
+                            </div>
+                            <div class="grid-cel mg-x2 mg-s-hidden summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
                                 x-show="!eachSearch.JobTitle.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
                             </div>
-                            <div class="grid-cel mg-x4 summary-info" :id="$id('updated-date-input')"
+                            <!-- For larger screens -->
+                            <div class="grid-cel mg-x2 mg-s-hidden summary-info" :id="$id('updated-date-input')"
                                 @keyup.enter="eachSearch.JobTitle.SaveChanges()"
                                 @keydown.tab="eachSearch.JobTitle.SaveChanges()"
                                 @click.outside="eachSearch.JobTitle.SaveChanges()"
                                 @keyup.esc="eachSearch.JobTitle.ResetChanges()"
                                 x-show="eachSearch.JobTitle.BeingEdited">
-                                <input type="text" x-model="eachSearch.JobTitle.Data">
+                                <input class="input-area" type="text" x-model="eachSearch.JobTitle.Data"
+                                    placeholder="Job Title">
+                            </div>
+                            <!-- For mobile vertical -->
+                            <div class="grid-cel mg-x6 mg-s-display summary-info" :id="$id('updated-date-input')"
+                                @keyup.enter="eachSearch.JobTitle.SaveChanges()"
+                                @keydown.tab="eachSearch.JobTitle.SaveChanges()"
+                                @click.outside="eachSearch.JobTitle.SaveChanges()"
+                                @keyup.esc="eachSearch.JobTitle.ResetChanges()"
+                                x-show="eachSearch.JobTitle.BeingEdited">
+                                <input class="input-area" type="text" x-model="eachSearch.JobTitle.Data"
+                                    placeholder="Job Title">
                             </div>
                             <div class="grid-cel mg-x2 mg-s-hidden" @click="eachSearch.StartDate.BeingEdited = true"
                                 x-show="!eachSearch.StartDate.BeingEdited">
