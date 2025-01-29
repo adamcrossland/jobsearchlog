@@ -75,6 +75,15 @@
                         <input id="showBeforeDate" type="date" x-model="FilterDateEnd">
                     </div>
                 </div>
+                <div class="mg_row">
+                    <div class="mg-row" id="onlyShowActive" data-toggle="htmlpreview">
+                        <label class="mg-toggle">
+                          Only show Active applications
+                          <input type="checkbox" checked="" x-model="OnlyShowActive">
+                          <span class="mg-toggle--icon"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="summary-page" x-show="!DetailsShown" x-transition.duration.100ms>

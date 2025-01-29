@@ -22,6 +22,7 @@ class JobSearchViewModel {
     public SettingsShown: boolean;
     public CurrentView: JobSearchItem[] = [];
     private searchTerm: string;
+    private onlyShowActive: boolean;
 
     constructor() {
         this.nextRowId = 0;
@@ -36,6 +37,7 @@ class JobSearchViewModel {
         this.sortView(this.currentSortOrder);
         this.SettingsShown = false;
         this.searchTerm = "";
+        this.onlyShowActive = false;
     }
 
     public LoadData(): void {
@@ -178,7 +180,11 @@ class JobSearchViewModel {
         this.CurrentView = this.JobSearchData.filter((row) => {
             let include:boolean = true;
             
-            if (row.StartDate.Data < startDate || row.StartDate.Data > endDate) {
+            if (this.onlyShowActive && !row.Open) {
+                include = false;
+            }
+
+            if (include && row.StartDate.Data < startDate || row.StartDate.Data > endDate) {
                 include = false;
             }
 
@@ -303,6 +309,15 @@ class JobSearchViewModel {
 
     set Search(term: string) {
         this.searchTerm = term.toLowerCase();
+        this.populateCurrentView();
+    }
+
+    get OnlyShowActive(): boolean {
+        return this.onlyShowActive;
+    }
+
+    set OnlyShowActive(newValue: boolean) {
+        this.onlyShowActive = newValue;
         this.populateCurrentView();
     }
 }
