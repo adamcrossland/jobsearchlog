@@ -12,6 +12,7 @@ export class JobSearchItem {
     DetailsHaveChanged: boolean;
     Open: boolean;
     private origOpen: boolean;
+    private preparedSearchText: string;
 
     constructor(id: number, startDate: string = dateToString(new Date()),
         updatedDate: string = dateToString(new Date()), employerName: string = "",
@@ -26,6 +27,7 @@ export class JobSearchItem {
         this.DetailsHaveChanged = false;
         this.Open = isOpen;
         this.origOpen = isOpen;
+        this.preparedSearchText = "";
     }
 
     public PrepareToPersist(): void {
@@ -53,6 +55,7 @@ export class JobSearchItem {
         newDetail.BeingEdited = true;
         this.Details.push(newDetail);
         this.DetailsHaveChanged = true;
+        this.setSearchText();
     }
 
     public SetDetails(rawDetails: DetailDataItem[]) {
@@ -67,6 +70,7 @@ export class JobSearchItem {
     public DeleteDetail(detailIndex: number) {
         this.Details.splice(detailIndex, 1);
         this.DetailsHaveChanged = true;
+        this.setSearchText();
     }
 
     public get EmployerAndJobTitle(): string {
@@ -77,12 +81,20 @@ export class JobSearchItem {
         return result;
     }
 
-    public get SearchText(): string {
+    private setSearchText() {
         let details:string = this.Details.map(
             (eachDetail) => { return eachDetail.Data.toLowerCase() }
         ).join(" ").trim();
 
-        return `${this.EmployerName.Data.toLowerCase()} ${this.JobTitle.Data.toLowerCase()} ${details}`;
+        this.preparedSearchText =  `${this.EmployerName.Data.toLowerCase()} ${this.JobTitle.Data.toLowerCase()} ${details}`;
+    }
+
+    public get SearchText(): string {
+        if (this.preparedSearchText == "") {
+            this.setSearchText();
+        }
+
+        return this.preparedSearchText;
     }
 
     public toJSON() {

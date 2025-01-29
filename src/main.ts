@@ -9,8 +9,6 @@ import { JobSearchItem} from  "./JobSearchItem"
 // make Alpine on window available for better DX
 window.Alpine = Alpine
 
-
-
 const storageKey: string = "jobSearchData";
 
 class JobSearchViewModel {
