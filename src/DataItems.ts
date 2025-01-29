@@ -26,6 +26,8 @@ export class DataItem implements IDataItem {
             this.prepersistedValue = this.tempValue;
             this.tempValue = null;
             this.BeingEdited = false;
+        } else {
+            this.BeingEdited = false;
         }
     }
 
