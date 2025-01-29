@@ -22,10 +22,23 @@
                 x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
             <button aria-label="Undo changes" title="Undo Changes" class="mg-button mg-button--small top-level-button"
                 x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
-            <button aria-label="Sort and filter options" title="Sort and Filter" class="mg-button mg-button--small top-level-button"
-                x-cloak x-show="!DetailsShown && !SettingsShown" @click="SettingsShown = true">Sort and Filter</button>
-            <button class="mg-button mg-button--small top-level-button"
-                x-cloak x-show="!DetailsShown && SettingsShown" @click="SettingsShown = false">Close</button>
+        </div>
+        <div class="search-bar mg-container">
+            <div class="mg-row mg-x--start">
+                <div class="mg-group grid-cel mg-x10" id="group-example" data-toggle="htmlpreview">
+                    <div class="mg-dropdown" data-value="bmw" id="car-dropdown">
+                      <button title="Sort and Filter" class="mg-button mg-button--small"
+                            @click="SettingsShown = !SettingsShown">
+                        Sort/Filter
+                      </button>
+                    </div>
+                    <input class="mg-x6 mg-input--small" type="text" title="test"
+                        placeholder="search" x-model="Search">
+                    <button class="mg-button mg-button--small" @click="Search=''">
+                        <i class="mg-icon icon-close"></i>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="settings" x-show="SettingsShown" x-transition.duration.100ms>
             <div class="mg-container">
@@ -60,6 +73,15 @@
                     </div>
                     <div class="grid-cel mg-x8">
                         <input id="showBeforeDate" type="date" x-model="FilterDateEnd">
+                    </div>
+                </div>
+                <div class="mg_row">
+                    <div class="mg-row" id="onlyShowActive" data-toggle="htmlpreview">
+                        <label class="mg-toggle">
+                          Only show Active applications
+                          <input type="checkbox" checked="" x-model="OnlyShowActive">
+                          <span class="mg-toggle--icon"></span>
+                        </label>
                     </div>
                 </div>
             </div>

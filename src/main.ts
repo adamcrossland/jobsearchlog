@@ -1,101 +1,13 @@
 import Alpine from 'alpinejs'
 import { dateToString } from './conversions'
-import { DetailDataItem, DetailKind, DataItem} from "./DataItems"
+import { DataItem} from "./DataItems"
 import Settings from "./Settings"
 import { SortOrder } from './Sorting'
+import { JobSearchItem} from  "./JobSearchItem"
 
 // suggested in the Alpine docs:
 // make Alpine on window available for better DX
 window.Alpine = Alpine
-
-class JobSearchItem {
-    Id: number;
-    StartDate: DataItem;
-    UpdatedDate: DataItem;
-    EmployerName: DataItem;
-    JobTitle: DataItem;
-    DetailsOpen: boolean;
-    Details: DetailDataItem[];
-    DetailsHaveChanged: boolean;
-    Open: boolean;
-    private origOpen: boolean;
-
-    constructor(id: number, startDate: string = dateToString(new Date()),
-        updatedDate: string = dateToString(new Date()), employerName: string = "",
-        jobTitle: string = "", isOpen: boolean = true) {
-        this.Id = id;
-        this.StartDate = new DataItem(startDate, false);
-        this.UpdatedDate = new DataItem(updatedDate, false);
-        this.EmployerName = new DataItem(employerName, false);
-        this.JobTitle = new DataItem(jobTitle, false);
-        this.DetailsOpen = false;
-        this.Details = [];
-        this.DetailsHaveChanged = false;
-        this.Open = isOpen;
-        this.origOpen = isOpen;
-    }
-
-    public PrepareToPersist(): void {
-        this.StartDate.PrepareToPersist();
-        this.UpdatedDate.PrepareToPersist();
-        this.EmployerName.PrepareToPersist();
-        this.JobTitle.PrepareToPersist();
-        this.Details.forEach((eachDetail) => {
-            eachDetail.PrepareToPersist();
-        });
-        this.DetailsHaveChanged = false;
-    }
-
-    public AfterPersisting(): void {
-        this.origOpen = this.Open;    
-    }
-
-    get IsDirty(): boolean {
-        return this.EmployerName.HasChanges || this.StartDate.HasChanges || this.UpdatedDate.HasChanges
-            || this.DetailsHaveChanged || this.Open != this.origOpen;
-    }
-
-    public AddDetail(detailKind: DetailKind, detailData: string) {
-        let newDetail = new DetailDataItem(detailKind, detailData);
-        newDetail.BeingEdited = true;
-        this.Details.push(newDetail);
-        this.DetailsHaveChanged = true;
-    }
-
-    public SetDetails(rawDetails: DetailDataItem[]) {
-        this.Details = [];
-        rawDetails.forEach((rawDetail: DetailDataItem) => {
-            let newDetail: DetailDataItem = new DetailDataItem(rawDetail.Kind, rawDetail.Value);
-            newDetail.AddedDate = rawDetail.AddedDate;
-            this.Details.push(newDetail);
-        });
-    }
-
-    public DeleteDetail(detailIndex: number) {
-        this.Details.splice(detailIndex, 1);
-        this.DetailsHaveChanged = true;
-    }
-
-    public get EmployerAndJobTitle(): string {
-        let result: string = `${this.EmployerName.Data} - ${this.JobTitle.Data}`;
-        if (!this.Open) {
-            result += '- Inactive';
-        }
-        return result;
-    }
-
-    public toJSON() {
-        return {
-            Id: this.Id,
-            StartDate: this.StartDate,
-            UpdatedDate: this.UpdatedDate,
-            EmployerName: this.EmployerName,
-            JobTitle: this.JobTitle,
-            Details: this.Details,
-            Open: this.Open
-        }
-    }
-}
 
 const storageKey: string = "jobSearchData";
 
@@ -109,6 +21,8 @@ class JobSearchViewModel {
     private currentSortOrder: SortOrder = SortOrder.Unknown;
     public SettingsShown: boolean;
     public CurrentView: JobSearchItem[] = [];
+    private searchTerm: string;
+
 
     constructor() {
         this.nextRowId = 0;
@@ -122,6 +36,7 @@ class JobSearchViewModel {
         this.currentSortOrder = this.Settings.DefaultSortOrder;
         this.sortView(this.currentSortOrder);
         this.SettingsShown = false;
+        this.searchTerm = "";
     }
 
     public LoadData(): void {
@@ -261,11 +176,24 @@ class JobSearchViewModel {
     private populateCurrentView() {
         let startDate: string = this.Settings?.ShowDateRangeBegin || "1970-01-01";
         let endDate: string = this.Settings?.ShowDateRangeEnd || dateToString(new Date());
-        this.CurrentView = [];
-        this.JobSearchData.forEach((row) => {
-            if (row.StartDate.Data >= startDate && row.StartDate.Data <= endDate) {
-                this.CurrentView.push(row);
+        this.CurrentView = this.JobSearchData.filter((row) => {
+            let include:boolean = true;
+            
+            if (this.Settings.OnlyShowActive && !row.Open) {
+                include = false;
             }
+
+            if (include && row.StartDate.Data < startDate || row.StartDate.Data > endDate) {
+                include = false;
+            }
+
+            if (include && this.searchTerm?.length > 0) {
+                if (row.SearchText.indexOf(this.searchTerm) == -1) {
+                    include = false;
+                }
+            } 
+
+            return include;
         });
     }
 
@@ -372,6 +300,24 @@ class JobSearchViewModel {
             this.Settings.ShowDateRangeEnd = newDate;
             this.refreshCurrentView();
         }
+    }
+
+    get Search(): string {
+        return this.searchTerm;    
+    }
+
+    set Search(term: string) {
+        this.searchTerm = term.toLowerCase();
+        this.populateCurrentView();
+    }
+
+    get OnlyShowActive(): boolean {
+        return this.Settings.OnlyShowActive;
+    }
+
+    set OnlyShowActive(newValue: boolean) {
+        this.Settings.OnlyShowActive = newValue;
+        this.populateCurrentView();
     }
 }
 

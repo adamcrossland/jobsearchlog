@@ -6,7 +6,8 @@ const settingsStorageKey = "jobSearchSettings";
 interface ISettings {
     DefaultSortOrder: SortOrder;
     ShowDateRangeBegin: string|null;
-    ShowDateRangeEnd: string|null;
+    ShowDateRangeEnd: string | null;
+    OnlyShowActive: boolean | null;
 }
 
 export default class Settings implements ISettings {
@@ -15,15 +16,18 @@ export default class Settings implements ISettings {
     ShowDateRangeBegin: string|null;
     ShowDateRangeEnd: string|null;
     private origSettings: ISettings;
+    public OnlyShowActive: boolean;
 
     constructor(defaultSortOrder: SortOrder = SortOrder.ActiveFirstDateDescending,
             showDateRangeBegin: string|null = "1970-01-01",
-            showDateRangeEnd: string|null = dateToString(new Date())) {
+            showDateRangeEnd: string | null = dateToString(new Date()),
+            onlyShowActive:boolean = false) {
         this.DefaultSortOrder = defaultSortOrder;
         this.ShowDateRangeBegin = showDateRangeBegin;
         this.ShowDateRangeEnd = showDateRangeEnd;
-        this.origSettings = this.Copy();
         this.CurrentSortOrder = defaultSortOrder;
+        this.OnlyShowActive = onlyShowActive;
+        this.origSettings = this.Copy();
     }
 
     public static LoadSettings(): Settings {
@@ -34,7 +38,7 @@ export default class Settings implements ISettings {
         if (loadedSettingsString != null && loadedSettingsString.length > 0) {
             rawLoadedSettings = JSON.parse(loadedSettingsString);
             loadedSettings = new Settings(rawLoadedSettings.DefaultSortOrder, rawLoadedSettings.ShowDateRangeBegin || null,
-                rawLoadedSettings.ShowDateRangeEnd
+                rawLoadedSettings.ShowDateRangeEnd, rawLoadedSettings.OnlyShowActive
             );
         }
 
@@ -49,6 +53,8 @@ export default class Settings implements ISettings {
         } else if (this.ShowDateRangeBegin != this.origSettings.ShowDateRangeBegin) {
             isDirty = true;
         } else if (this.ShowDateRangeEnd != this.origSettings.ShowDateRangeEnd) {
+            isDirty = true;
+        } else if (this.OnlyShowActive != this.origSettings.OnlyShowActive) {
             isDirty = true;
         }
 
@@ -68,7 +74,8 @@ export default class Settings implements ISettings {
         return {
             DefaultSortOrder: this.DefaultSortOrder,
             ShowDateRangeBegin: this.ShowDateRangeBegin,
-            ShowDateRangeEnd: this.ShowDateRangeEnd
+            ShowDateRangeEnd: this.ShowDateRangeEnd,
+            OnlyShowActive: this.OnlyShowActive
         }
     }
 
@@ -76,8 +83,8 @@ export default class Settings implements ISettings {
         let copy: ISettings = {
             DefaultSortOrder: this.DefaultSortOrder,
             ShowDateRangeBegin: this.ShowDateRangeBegin,
-            ShowDateRangeEnd: this.ShowDateRangeEnd
-
+            ShowDateRangeEnd: this.ShowDateRangeEnd,
+            OnlyShowActive: this.OnlyShowActive
         }
 
         return copy;
@@ -87,6 +94,7 @@ export default class Settings implements ISettings {
         this.DefaultSortOrder = this.origSettings.DefaultSortOrder;
         this.ShowDateRangeBegin = this.origSettings.ShowDateRangeBegin;
         this.ShowDateRangeEnd = this.origSettings.ShowDateRangeEnd;
+        this.OnlyShowActive = this.origSettings.OnlyShowActive || false;
     }
 
     get DefaultStartDate(): boolean {
