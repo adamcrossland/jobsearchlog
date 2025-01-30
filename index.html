@@ -25,7 +25,7 @@
         </div>
         <div class="search-bar mg-container">
             <div class="mg-row mg-x--start">
-                <div class="mg-group grid-cel mg-x10" id="group-example" data-toggle="htmlpreview">
+                <div class="mg-group grid-cel mg-x10" id="group-example">
                     <div class="mg-dropdown" data-value="bmw" id="car-dropdown">
                       <button title="Sort and Filter" class="mg-button mg-button--small"
                             @click="SettingsShown = !SettingsShown">
@@ -44,7 +44,7 @@
             <div class="mg-container">
                 <div class="mg-row">
                     <div class="grid-cel mg-x2"><label for="currentSortOrder">Sort:</label></div>
-                    <div class="grid-cel mg-x6">
+                    <div class="grid-cel mg-x6 mg-select">
                         <select id="currentSortOrder" x-model.number="CurrentSortOrder">
                             <option value=1>By Date Descending</options>
                             <option value=2>By Date Ascending</options>
@@ -63,20 +63,34 @@
                     <div class="grid-cel mg-x2 filter-range-label">
                         <label for="showAfterDate">Show After:</label>
                     </div>
-                    <div class="grid-cel mg-x8">
-                        <input id="showAfterDate" type="date" x-model="FilterDateBegin">
+                    <div class="grid-cel mg-x2">
+                        <input id="showAfterDate" type="date" x-model="FilterDateBegin" :disabled="!BeginDateRangeFiltering">
+                    </div>
+                    <div class="grid-cel mg-x2">
+                        <label class="mg-toggle">
+                            On
+                            <input type="checkbox" checked="" x-model="BeginDateRangeFiltering">
+                            <span class="mg-toggle--icon"></span>
+                          </label>
                     </div>
                 </div>
                 <div class="mg-row">
                     <div class="grid-cel mg-x2 filter-range-label">
                         <label for="showBeforeDate">Show Before:</label>
                     </div>
-                    <div class="grid-cel mg-x8">
-                        <input id="showBeforeDate" type="date" x-model="FilterDateEnd">
+                    <div class="grid-cel mg-x2">
+                        <input id="showBeforeDate" type="date" x-model="FilterDateEnd" :disabled="!EndDateRangeFiltering">
+                    </div>
+                    <div class="grid-cel mg-x2">
+                        <label class="mg-toggle">
+                            On
+                            <input type="checkbox" checked="" x-model="EndDateRangeFiltering">
+                            <span class="mg-toggle--icon"></span>
+                        </label>
                     </div>
                 </div>
                 <div class="mg_row">
-                    <div class="mg-row" id="onlyShowActive" data-toggle="htmlpreview">
+                    <div class="mg-row" id="onlyShowActive">
                         <label class="mg-toggle">
                           Only show Active applications
                           <input type="checkbox" checked="" x-model="OnlyShowActive">
@@ -213,7 +227,7 @@
                     </div>
                 </div>
                 <div class="mg-row mg-m-display detail-buttons">
-                    <div class="mg-col mg-x4" data-toggle="htmlpreview">
+                    <div class="mg-col mg-x4">
                         <button class="mg-button mg-button--outline mg-collapse mg-icon-collapse"
                             data-toggle="collapse">Actions</button>
                         <div class="mg-collapse--content">

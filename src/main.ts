@@ -183,7 +183,11 @@ class JobSearchViewModel {
                 include = false;
             }
 
-            if (include && row.StartDate.Data < startDate || row.StartDate.Data > endDate) {
+            if (include && this.Settings.DateRangeBeginFilteringOn && row.StartDate.Data < startDate) {
+                include = false;
+            }
+
+            if (include && this.Settings.DateRangeEndFilteringOn && row.StartDate.Data > endDate) {
                 include = false;
             }
 
@@ -317,6 +321,24 @@ class JobSearchViewModel {
 
     set OnlyShowActive(newValue: boolean) {
         this.Settings.OnlyShowActive = newValue;
+        this.populateCurrentView();
+    }
+
+    get BeginDateRangeFiltering(): boolean {
+        return this.Settings.DateRangeBeginFilteringOn;
+    }
+
+    set BeginDateRangeFiltering(newValue: boolean) {
+        this.Settings.DateRangeBeginFilteringOn = newValue;
+        this.populateCurrentView();
+    }
+
+    get EndDateRangeFiltering(): boolean {
+        return this.Settings.DateRangeEndFilteringOn;
+    }
+
+    set EndDateRangeFiltering(newValue: boolean) {
+        this.Settings.DateRangeEndFilteringOn = newValue;
         this.populateCurrentView();
     }
 }

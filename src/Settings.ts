@@ -8,25 +8,32 @@ interface ISettings {
     ShowDateRangeBegin: string|null;
     ShowDateRangeEnd: string | null;
     OnlyShowActive: boolean | null;
+    DateRangeBeginFilteringOn: boolean;
+    DateRangeEndFilteringOn: boolean;
 }
 
 export default class Settings implements ISettings {
     DefaultSortOrder: SortOrder;
     CurrentSortOrder: SortOrder;
     ShowDateRangeBegin: string|null;
-    ShowDateRangeEnd: string|null;
+    ShowDateRangeEnd: string | null;
+    DateRangeBeginFilteringOn: boolean;
+    DateRangeEndFilteringOn: boolean;
     private origSettings: ISettings;
     public OnlyShowActive: boolean;
 
     constructor(defaultSortOrder: SortOrder = SortOrder.ActiveFirstDateDescending,
             showDateRangeBegin: string|null = "1970-01-01",
             showDateRangeEnd: string | null = dateToString(new Date()),
-            onlyShowActive:boolean = false) {
+            onlyShowActive: boolean = false, dateRangeBeginOn: boolean = false,
+            dateRangeEndOn: boolean = false) {
         this.DefaultSortOrder = defaultSortOrder;
         this.ShowDateRangeBegin = showDateRangeBegin;
         this.ShowDateRangeEnd = showDateRangeEnd;
         this.CurrentSortOrder = defaultSortOrder;
         this.OnlyShowActive = onlyShowActive;
+        this.DateRangeBeginFilteringOn = dateRangeBeginOn;
+        this.DateRangeEndFilteringOn = dateRangeEndOn;
         this.origSettings = this.Copy();
     }
 
@@ -38,7 +45,9 @@ export default class Settings implements ISettings {
         if (loadedSettingsString != null && loadedSettingsString.length > 0) {
             rawLoadedSettings = JSON.parse(loadedSettingsString);
             loadedSettings = new Settings(rawLoadedSettings.DefaultSortOrder, rawLoadedSettings.ShowDateRangeBegin || null,
-                rawLoadedSettings.ShowDateRangeEnd, rawLoadedSettings.OnlyShowActive
+                rawLoadedSettings.ShowDateRangeEnd, rawLoadedSettings.OnlyShowActive,
+                rawLoadedSettings.DateRangeBeginFilteringOn,
+                rawLoadedSettings.DateRangeEndFilteringOn
             );
         }
 
@@ -56,8 +65,12 @@ export default class Settings implements ISettings {
             isDirty = true;
         } else if (this.OnlyShowActive != this.origSettings.OnlyShowActive) {
             isDirty = true;
+        } else if (this.DateRangeBeginFilteringOn != this.origSettings.DateRangeBeginFilteringOn) {
+            isDirty = true;
+        } else if (this.DateRangeEndFilteringOn != this.origSettings.DateRangeEndFilteringOn) {
+            isDirty = true;
         }
-
+        
         return isDirty;
     }
 
@@ -75,7 +88,9 @@ export default class Settings implements ISettings {
             DefaultSortOrder: this.DefaultSortOrder,
             ShowDateRangeBegin: this.ShowDateRangeBegin,
             ShowDateRangeEnd: this.ShowDateRangeEnd,
-            OnlyShowActive: this.OnlyShowActive
+            OnlyShowActive: this.OnlyShowActive,
+            DateRangeBeginFilteringOn: this.DateRangeBeginFilteringOn,
+            DateRangeEndFilteringOn: this.DateRangeEndFilteringOn
         }
     }
 
@@ -84,7 +99,9 @@ export default class Settings implements ISettings {
             DefaultSortOrder: this.DefaultSortOrder,
             ShowDateRangeBegin: this.ShowDateRangeBegin,
             ShowDateRangeEnd: this.ShowDateRangeEnd,
-            OnlyShowActive: this.OnlyShowActive
+            OnlyShowActive: this.OnlyShowActive,
+            DateRangeBeginFilteringOn: this.DateRangeBeginFilteringOn,
+            DateRangeEndFilteringOn: this.DateRangeEndFilteringOn
         }
 
         return copy;
@@ -95,6 +112,8 @@ export default class Settings implements ISettings {
         this.ShowDateRangeBegin = this.origSettings.ShowDateRangeBegin;
         this.ShowDateRangeEnd = this.origSettings.ShowDateRangeEnd;
         this.OnlyShowActive = this.origSettings.OnlyShowActive || false;
+        this.DateRangeBeginFilteringOn = this.origSettings.DateRangeBeginFilteringOn;
+        this.DateRangeEndFilteringOn = this.origSettings.DateRangeEndFilteringOn
     }
 
     get DefaultStartDate(): boolean {
