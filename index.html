@@ -64,9 +64,19 @@
                         <label for="showAfterDate">Show After:</label>
                     </div>
                     <div class="grid-cel mg-x2">
-                        <input id="showAfterDate" type="date" x-model="FilterDateBegin" :disabled="!BeginDateRangeFiltering">
+                        <input id="showAfterDate" type="date" x-model="FilterDateBegin"
+                            :disabled="!BeginDateRangeFiltering">
                     </div>
-                    <div class="grid-cel mg-x2">
+                    <!-- For larger screens -->
+                    <div class="grid-cel mg-x2 mg-s-hidden">
+                        <label class="mg-toggle">
+                            On
+                            <input type="checkbox" checked="" x-model="BeginDateRangeFiltering">
+                            <span class="mg-toggle--icon"></span>
+                          </label>
+                    </div>
+                    <!-- For vertical mobile screens -->
+                    <div class="grid-cel mg-x2 mg-s-display" style="padding-left: 6em;">
                         <label class="mg-toggle">
                             On
                             <input type="checkbox" checked="" x-model="BeginDateRangeFiltering">
@@ -79,9 +89,17 @@
                         <label for="showBeforeDate">Show Before:</label>
                     </div>
                     <div class="grid-cel mg-x2">
-                        <input id="showBeforeDate" type="date" x-model="FilterDateEnd" :disabled="!EndDateRangeFiltering">
+                        <input id="showBeforeDate" type="date" x-model="FilterDateEnd"
+                            :disabled="!EndDateRangeFiltering">
                     </div>
-                    <div class="grid-cel mg-x2">
+                    <div class="grid-cel mg-x2 mg-s-hidden">
+                        <label class="mg-toggle">
+                            On
+                            <input type="checkbox" checked="" x-model="EndDateRangeFiltering">
+                            <span class="mg-toggle--icon"></span>
+                        </label>
+                    </div>
+                    <div class="grid-cel mg-x2 mg-s-display" style="padding-left: 6em;">
                         <label class="mg-toggle">
                             On
                             <input type="checkbox" checked="" x-model="EndDateRangeFiltering">
