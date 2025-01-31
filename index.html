@@ -14,7 +14,7 @@
 
 <body>
     <h1>Job Search Log</h1>
-    <div x-data="$store.jobsearchdata">
+    <div x-data="$store.jobsearchdata" @keydown.ctrl.s.prevent.stop.window="Persist()">
         <div class="toplevel-buttons">
             <button aria-label="Add new search" title="Add Search" class="mg-button mg-button--small mg-button--outline top-level-button"
                 @click="NewSearchRow()" x-show="!DetailsShown">+ Add</button>
