@@ -271,7 +271,6 @@
                             <div class="grid-cel mg-x6 detail-content"
                                 @keyup.enter="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
                                 @keydown.tab="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
-                                @click.outside="eachDetail.SaveChanges(); DetailsToShow.DetailsHaveChanged=true;"
                                 @keyup.esc="eachDetail.ResetChanges()"
                                 x-show="eachDetail.BeingEdited">
                                 <input type="text" x-model="eachDetail.Data">
