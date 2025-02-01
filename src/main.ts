@@ -90,10 +90,8 @@ class JobSearchViewModel {
         // Not totally sure that this belongs here, but it is convenient.
         // TODO: determine if this is the optimal place to handle setting input focus
         Alpine.nextTick(() => {
-            let firstElement: HTMLElement|null = document.querySelector("#searches-table tbody tr td + td input");
-            if (firstElement != null) {
-                firstElement.focus();
-            }
+            // @ts-ignore
+            document.querySelectorAll(".employer-name-editable")[0].focus();
         });
     }
 
