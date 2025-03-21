@@ -145,15 +145,6 @@
                                 <input class="input-area employer-name-editable" type="text" x-model="eachSearch.EmployerName.Data"
                                     placeholder="Employer">
                             </div>
-                            <!-- For mobile vertical -->
-                            <!-- <div class="grid-cel mg-x6 mg-s-display summary-info summary-info-editable" :id="$id('employer-name-input')"
-                                @keyup.enter="eachSearch.EmployerName.SaveChanges()"
-                                @keydown.tab="eachSearch.EmployerName.SaveChanges()"
-                                @keyup.esc="eachSearch.EmployerName.ResetChanges()"
-                                x-show="eachSearch.EmployerName.BeingEdited">
-                                <input class="input-area employer-name-editable" type="text" x-model="eachSearch.EmployerName.Data"
-                                    placeholder="Employer">
-                            </div> -->
                             <div class="grid-cel mg-x4 summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
                                 x-show="!eachSearch.JobTitle.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
@@ -190,29 +181,11 @@
                                 x-show="eachSearch.StartDate.BeingEdited">
                                 <input type="date" x-model="eachSearch.StartDate.Data">
                             </div>
-                            <!-- <div class="grid-cel mg-x4 mg-m-hidden">
-                                <button aria-label="Show Details of Search" class="mg-button mg-button--small mg-button--clear row-level-button" @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">Show Details</button>
-                                <button aria-label="Mark Search as Active" class="mg-button mg-button--small mg-button--clear row-level-button" @click="eachSearch.Open = true" x-show="!eachSearch.Open">Activate</button>
-                                <button aria-label="Mark Search as Inactive" class="mg-button mg-button--small mg-button--clear row-level-button" @click="eachSearch.Open = false" x-show="eachSearch.Open">Deactivate</button>
-                                <button aria-label="Delete Search" class="mg-button mg-button--small mg-button--clear row-level-button" @click="Delete(eachSearch.Id)">- Delete</button>
-                            </div> -->
                             <div class="grid-cel mg-x2">
                                 <button aria-label="Show Details of Search" title="Show Details" class="mg-button mg-button--small mg-button--clear row-level-button"
                                     @click="$store.jobsearchdata.DetailsToShow=eachSearch;$store.jobsearchdata.DetailsShown=true">
                                     <i class="mg-icon mg-icon--m icon-more-inline"></i>
                                 </button>
-                                <!-- <button aria-label="Mark Search as Active" title="Activate" class="mg-button mg-button--small mg-button--clear row-level-button"
-                                    @click="eachSearch.Open = true" x-show="!eachSearch.Open">
-                                    <i class="mg-icon mg-icon--m icon-plus"></i>
-                                </button>
-                                <button aria-label="Mark Search as Inactive" title="Deactivate" class="mg-button mg-button--small mg-button--clear row-level-button"
-                                    @click="eachSearch.Open = false" x-show="eachSearch.Open">
-                                    <i class="mg-icon mg-icon--m icon-minus"></i>
-                                </button>
-                                <button aria-label="Delete Search" title="Delete" class="mg-button mg-button--small mg-button--clear row-level-button"
-                                    @click="Delete(eachSearch.Id)">
-                                    <i class="mg-icon mg-icon--m icon-close mg-icon--action"></i>
-                                </button> -->
                             </div>
                         </div>
                     </template>
