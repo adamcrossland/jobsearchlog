@@ -30,6 +30,8 @@
                       <button title="Sort and Filter" class="mg-button mg-button--small"
                             @click="SettingsShown = !SettingsShown">
                         Sort/Filter
+                        <i class="mg-icon icon-arrow-down" x-show="!SettingsShown"></i>
+                        <i class="mg-icon icon-arrow-up" x-show="SettingsShown"></i>
                       </button>
                     </div>
                     <input class="mg-x6 mg-input--small" type="text" title="test"
