@@ -1,9 +1,9 @@
 import Alpine from 'alpinejs'
 import { dateToString } from './conversions'
-import { DataItem} from "./DataItems"
-import Settings from "./Settings"
-import { SortOrder } from './Sorting'
-import { JobSearchItem} from  "./JobSearchItem"
+import { DataItem} from "./dataitems"
+import Settings from "./settings"
+import { SortOrder } from './sorting'
+import { JobSearchItem} from  "./jobsearchitem"
 
 // suggested in the Alpine docs:
 // make Alpine on window available for better DX

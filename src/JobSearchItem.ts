@@ -1,4 +1,4 @@
-import { DataItem, DetailDataItem, DetailKind } from "./DataItems"
+import { DataItem, DetailDataItem, DetailKind } from "./dataitems"
 import {dateToString } from "./conversions"
 
 export class JobSearchItem {
