@@ -1,4 +1,4 @@
-import { SortOrder } from "./Sorting";
+import { SortOrder } from "./sorting";
 import { dateToString } from "./conversions";
 
 const settingsStorageKey = "jobSearchSettings";

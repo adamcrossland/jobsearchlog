@@ -1,4 +1,4 @@
-import { DataItem, DetailDataItem, DetailKind } from "./DataItems"
+import { DataItem, DetailDataItem, DetailKind } from "./dataitems"
 import {dateToString } from "./conversions"
 
 export class JobSearchItem {
@@ -95,6 +95,18 @@ export class JobSearchItem {
         }
 
         return this.preparedSearchText;
+    }
+
+    public get NewestDetailDate(): string {
+        let newestDate: string = "";
+
+        this.Details.forEach(d => {
+            if (newestDate == "" || newestDate < d.AddedDate) {
+                newestDate = d.AddedDate;
+            }
+        });
+
+        return newestDate;
     }
 
     public toJSON() {

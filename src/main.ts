@@ -1,9 +1,9 @@
 import Alpine from 'alpinejs'
 import { dateToString } from './conversions'
-import { DataItem} from "./DataItems"
-import Settings from "./Settings"
-import { SortOrder } from './Sorting'
-import { JobSearchItem} from  "./JobSearchItem"
+import { DataItem} from "./dataitems"
+import Settings from "./settings"
+import { SortOrder } from './sorting'
+import { JobSearchItem} from  "./jobsearchitem"
 
 // suggested in the Alpine docs:
 // make Alpine on window available for better DX
@@ -199,6 +199,32 @@ class JobSearchViewModel {
         });
     }
 
+    private secondarySort(a: JobSearchItem, b: JobSearchItem): number {
+        // First, try ordering by date that entry was created
+        if (a.StartDate.Data < b.StartDate.Data) {
+            return -1;
+        } else if (a.StartDate.Data > b.StartDate.Data) {
+            return 1;
+        } else {
+            // Then, try ordering by name of employer, alphabetically
+            if (a.EmployerName.Data < b.EmployerName.Data) {
+                return -1;
+            } else if (a.EmployerName.Data > b.EmployerName.Data) {
+                return 1;
+            } else {
+                // Finally, try ordering by job title, alphabetically
+                if (a.JobTitle.Data < b.JobTitle.Data) {
+                    return -1;
+                } else if (a.JobTitle.Data > b.JobTitle.Data) {
+                    return 1;
+                } else {
+                    // Current order is fine
+                    return 0;
+                }
+            }
+        }
+    }
+
     private sortView(order:SortOrder) {
         switch (order) {
             case 3: // SortOrder.ActiveFirstDateDescending:
@@ -209,7 +235,7 @@ class JobSearchViewModel {
                         } else if (a.StartDate.Data > b.StartDate.Data) {
                             return -1;
                         } else {
-                            return 0;
+                            return this.secondarySort(a, b);
                         }
                     } else {
                         if (a.Open && !b.Open) {
@@ -228,7 +254,7 @@ class JobSearchViewModel {
                         } else if (a.StartDate.Data > b.StartDate.Data) {
                             return 1;
                         } else {
-                            return 0;
+                            return this.secondarySort(a, b);
                         }
                     } else {
                         if (a.Open && !b.Open) {
@@ -247,7 +273,7 @@ class JobSearchViewModel {
                     } else if (a.StartDate.Data > b.StartDate.Data) {
                         return 1;
                     } else {
-                        return 0;
+                        return this.secondarySort(a, b);
                     }
                 });
                 break;
@@ -261,7 +287,29 @@ class JobSearchViewModel {
                     } else if (a.StartDate.Data > b.StartDate.Data) {
                         return -1;
                     } else {
-                        return 0;
+                        return this.secondarySort(a, b);
+                    }
+                });
+                break;
+            case 5: // SortOrder.ActivityDateDescending
+                this.CurrentView.sort((a, b) => {
+                    if (a.NewestDetailDate < b.NewestDetailDate) {
+                        return 1;
+                    } else if (a.NewestDetailDate > b.NewestDetailDate) {
+                        return -1;
+                    } else {
+                        return this.secondarySort(a, b);
+                    }
+                });
+                break;
+            case 6: // SortOrder.ActivityDateAscending
+                this.CurrentView.sort((a, b) => {
+                    if (a.NewestDetailDate < b.NewestDetailDate) {
+                        return -1;
+                    } else if (a.NewestDetailDate > b.NewestDetailDate) {
+                        return 1;
+                    } else {
+                        return this.secondarySort(a,b);
                     }
                 });
                 break;
