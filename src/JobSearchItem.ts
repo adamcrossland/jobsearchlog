@@ -97,6 +97,18 @@ export class JobSearchItem {
         return this.preparedSearchText;
     }
 
+    public get NewestDetailDate(): string {
+        let newestDate: string = "";
+
+        this.Details.forEach(d => {
+            if (newestDate == "" || newestDate < d.AddedDate) {
+                newestDate = d.AddedDate;
+            }
+        });
+
+        return newestDate;
+    }
+
     public toJSON() {
         return {
             Id: this.Id,

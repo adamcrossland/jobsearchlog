@@ -265,6 +265,29 @@ class JobSearchViewModel {
                     }
                 });
                 break;
+            case 5: // SortOrder.ActivityDateDescending
+                this.CurrentView.sort((a, b) => {
+                    if (a.NewestDetailDate < b.NewestDetailDate) {
+                        return 1;
+                    } else if (a.NewestDetailDate > b.NewestDetailDate) {
+                        return -1;
+                    } else {
+
+                        return 0;
+                    }
+                });
+                break;
+            case 6: // SortOrder.ActivityDateAscending
+                this.CurrentView.sort((a, b) => {
+                    if (a.NewestDetailDate < b.NewestDetailDate) {
+                        return -1;
+                    } else if (a.NewestDetailDate > b.NewestDetailDate) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                });
+                break;
         }
     }
 
