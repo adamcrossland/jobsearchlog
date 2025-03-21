@@ -242,7 +242,14 @@
                         <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
                         <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
                         <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(4)">Add State</button>
-                    </div>
+                        <button class="mg-button mg-button--small mg-right danger-button"
+                            @click="DetailsShown = false;Delete(DetailsToShow.Id)">- Delete</button>
+                        <button class="mg-button mg-button--small mg-right warning-button"
+                            @click="DetailsToShow.Open = !DetailsToShow.Open">
+                            <span x-show="DetailsToShow.Open">Deactivate</span>
+                            <span x-show="!DetailsToShow.Open">Reactivate</span>
+                        </button>
+                     </div>
                 </div>
                 <div class="mg-row mg-m-display detail-buttons">
                     <div class="mg-col mg-x4">
@@ -252,7 +259,14 @@
                             <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(1)">Add Note</button>
                             <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
                             <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
-                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(4)">Add State</button>    
+                            <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(4)">Add State</button>
+                            <button class="mg-button mg-button--small warning-button"
+                                @click="DetailsToShow.Open = !DetailsToShow.Open">
+                                <span x-show="DetailsToShow.Open">Deactivate</span>
+                                <span x-show="!DetailsToShow.Open">Reactivate</span>
+                            </button>
+                            <button class="mg-button mg-button--small danger-button"
+                                @click="DetailsShown = false;Delete(DetailsToShow.Id)">- Delete</button>
                         </div>
                     </div>
                 </div>

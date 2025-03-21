@@ -76,3 +76,11 @@ tr {
 .input-area {
     width:80% !important;
 }
+
+.warning-button {
+    background-color: orange;
+}
+
+.danger-button {
+    background-color: red;
+}
