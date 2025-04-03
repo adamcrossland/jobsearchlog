@@ -482,6 +482,25 @@ class JobSearchViewModel {
             this.importFormatError = false;
         }
     }
+
+    get TotalRowCount(): number {
+        return this.JobSearchData.length;
+    }
+
+    get ActiveRowCount(): number {
+        let activeRowCount = 0;
+        this.JobSearchData.forEach((a) => {
+            if (a.Open) {
+                ++activeRowCount;
+            }
+        });
+            
+        return activeRowCount; 
+    }
+
+    get RowsInViewCount(): number {
+        return this.CurrentView.length;
+    }
 }
 
 Alpine.store('jobsearchdata', new JobSearchViewModel());
