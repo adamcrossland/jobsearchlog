@@ -16,18 +16,66 @@
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata" @keydown.ctrl.s.prevent.stop.window="Persist()">
         <div class="toplevel-buttons">
-            <button aria-label="Add new search" title="Add Search" class="mg-button mg-button--small mg-button--outline top-level-button"
+            <button aria-label="Add new job application" title="Add Job Application"
+                class="mg-button mg-button--small mg-button--outline top-level-button"
                 @click="NewSearchRow()" x-show="!DetailsShown">+ Add</button>
-            <button aria-label="Save changes" title="Save Changes" class="mg-button mg-button--small top-level-button"
+            <button aria-label="Import or export data" title="Import/Export"
+                class="mg-button mg-button--small mg-button--outline top-level-button"
+                @click="ImportExportShown = !ImportExportShown">
+                Import/Export
+                <i class="mg-icon icon-arrow-down" x-show="!ImportExportShown"></i>
+                <i class="mg-icon icon-arrow-up" x-show="ImportExportShown"></i>
+            </button>
+            <button aria-label="Save changes" title="Save Changes"
+                class="mg-button mg-button--small top-level-button"
                 x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
             <button aria-label="Undo changes" title="Undo Changes" class="mg-button mg-button--small top-level-button"
                 x-cloak x-show="PersistableChanges" @click="Revert()">Undo Changes</button>
         </div>
+        <div class="settings" x-show="ImportExportShown" x-transition.duration.100ms>
+            <div class="mg-container">
+                <div class="mg-row">
+                    <button aria-label="Export data" title="Export Data"
+                        class="mg-button mg-button--small grid-cel mg-x2"
+                        @click="ExportData">Export</button>
+                    <span class="export-explanation grid-cel mg-x8">Copy data to the clipboard that can be used to transfer your Job Search Log
+                        to a different browser.</span>
+                    <div class="grid-cel mg-x8 mg-x--offset2 export-data-error"
+                        x-show="ExportDataError.length > 0" x-text="ExportDataError"
+                        x-transition.duration.100ms></div>
+                    <div class="grid-cel mg-x8 mg-x--offset2 export-data-success"
+                        x-show="ExportDataSuccess" x-transition.duration.100ms>
+                        Exported data has been copied to the clipboard
+                    </div>
+                </div>
+                <div class="mg-row">
+                    <button aria-label="Import data" title="Import Data"
+                        class="mg-button mg-button--small grid-cel mg-x2"
+                        @click="PerformDataImport" :disabled="ImportData.length == 0 || ImportFormatError">Import</button>
+                    <div class="grid-cel mg-x8 export-explanation">
+                        <span>Paste the data from the Export
+                            button in the box below and hit the Import Data button to load it
+                            into this browser.</span>
+                        <span class="warning-text">Importing data from another
+                            browser will destroy any Job Search Log data in this browser. Please
+                            take this action with care.
+                        </span>
+                    </div>
+                </div>
+                <div class="mg-row">
+                    <div class="grid-cel mg-x8 mg-x--offset2 import-data-error"
+                        x-show="ImportFormatError">
+                        This data is not correctly formatted. Importing it will not succeed.
+                    </div>
+                    <textarea class="grid-cel mg-x8 mg-x--offset2" x-model="ImportData"></textarea>
+                </div>
+            </div>
+        </div>
         <div class="search-bar mg-container">
             <div class="mg-row mg-x--start">
-                <div class="mg-group grid-cel mg-x10" id="group-example">
-                    <div class="mg-dropdown" data-value="bmw" id="car-dropdown">
-                      <button title="Sort and Filter" class="mg-button mg-button--small"
+                <div class="mg-group grid-cel mg-x10">
+                    <div class="mg-dropdown">
+                      <button aria-label="Open or close sorting and filtering options" title="Sort and Filter" class="mg-button mg-button--small"
                             @click="SettingsShown = !SettingsShown">
                         Sort/Filter
                         <i class="mg-icon icon-arrow-down" x-show="!SettingsShown"></i>
@@ -36,7 +84,7 @@
                     </div>
                     <input class="mg-x6 mg-input--small" type="text" title="test"
                         placeholder="search" x-model="Search">
-                    <button class="mg-button mg-button--small" @click="Search=''">
+                    <button aria-label="Clear search" title="Clear Search" class="mg-button mg-button--small" @click="Search=''">
                         <i class="mg-icon icon-close"></i>
                     </button>
                 </div>
