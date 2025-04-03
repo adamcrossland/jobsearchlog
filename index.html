@@ -170,6 +170,14 @@
                 </div>
             </div>
         </div>
+        <div class="mg-container mg-s-hidden">
+            <span x-text="TotalRowCount"></span>
+            <span> total job applications, of which </span>
+            <span x-text="ActiveRowCount"></span>
+            <span> are active; </span>
+            <span x-text="RowsInViewCount"></span>
+            <span> are currenlty displayed</span>
+        </div>
         <div class="summary-page" x-show="!DetailsShown" x-transition.duration.100ms>
             <div x-show="IsEmpty()">
                 <h2>No job search activities have been added yet.</h2>
