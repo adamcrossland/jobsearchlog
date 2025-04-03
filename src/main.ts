@@ -156,6 +156,7 @@ class JobSearchViewModel {
 
         // After persisting, sort so that any new rows appear where they should
         this.sortView(this.CurrentSortOrder);
+        this.populateCurrentView();
     }
 
     public Revert(): void {
