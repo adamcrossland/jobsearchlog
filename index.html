@@ -27,7 +27,7 @@
             <div class="mg-row mg-x--start">
                 <div class="mg-group grid-cel mg-x10">
                     <div class="mg-dropdown" data-value="bmw" id="car-dropdown">
-                      <button title="Sort and Filter" class="mg-button mg-button--small"
+                      <button aria-label="Open or close sorting and filtering options" title="Sort and Filter" class="mg-button mg-button--small"
                             @click="SettingsShown = !SettingsShown">
                         Sort/Filter
                         <i class="mg-icon icon-arrow-down" x-show="!SettingsShown"></i>
@@ -36,7 +36,7 @@
                     </div>
                     <input class="mg-x6 mg-input--small" type="text" title="test"
                         placeholder="search" x-model="Search">
-                    <button class="mg-button mg-button--small" @click="Search=''">
+                    <button aria-label="Clear search" title="Clear Search" class="mg-button mg-button--small" @click="Search=''">
                         <i class="mg-icon icon-close"></i>
                     </button>
                 </div>
