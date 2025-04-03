@@ -410,11 +410,12 @@ class JobSearchViewModel {
 
     public ExportData() {
         try {
-            let exportableJSON = JSON.stringify(this.JobSearchData);
-            let encodedExportableJSON: string = btoa(exportableJSON);
+            const exportableJSON:string = JSON.stringify(this.JobSearchData);
+            const encodedJSON: string = encodeURIComponent(exportableJSON);
+            const base64EncodedExportableJSON: string = btoa(encodedJSON);
             // Copy to clipboard
             if (navigator.clipboard) {
-                navigator.clipboard.writeText(encodedExportableJSON).then(() => {
+                navigator.clipboard.writeText(base64EncodedExportableJSON).then(() => {
                     this.ExportDataSuccess = true;
                 }).catch((e) => {
                     this.ExportDataSuccess = false;
@@ -452,7 +453,8 @@ class JobSearchViewModel {
 
     public PerformDataImport() {
         try {
-            const decodedImportData: string = atob(this.importData);
+            const importData: string = atob(this.importData);
+            const decodedImportData = decodeURIComponent(importData);
             this.LoadData(decodedImportData);
             this.populateCurrentView();
             this.importData = "";
