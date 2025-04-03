@@ -156,6 +156,7 @@ class JobSearchViewModel {
 
         // After persisting, sort so that any new rows appear where they should
         this.sortView(this.CurrentSortOrder);
+        this.populateCurrentView();
     }
 
     public Revert(): void {
@@ -481,6 +482,25 @@ class JobSearchViewModel {
         if (error.length > 0) {
             this.importFormatError = false;
         }
+    }
+
+    get TotalRowCount(): number {
+        return this.JobSearchData.length;
+    }
+
+    get ActiveRowCount(): number {
+        let activeRowCount = 0;
+        this.JobSearchData.forEach((a) => {
+            if (a.Open) {
+                ++activeRowCount;
+            }
+        });
+            
+        return activeRowCount; 
+    }
+
+    get RowsInViewCount(): number {
+        return this.CurrentView.length;
     }
 }
 
