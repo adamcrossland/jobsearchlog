@@ -20,9 +20,13 @@ class JobSearchViewModel {
     public Settings: Settings;
     private currentSortOrder: SortOrder = SortOrder.Unknown;
     public SettingsShown: boolean;
+    public ImportExportShown: boolean;
     public CurrentView: JobSearchItem[] = [];
     private searchTerm: string;
-
+    private importData: string;
+    private importFormatError: boolean;
+    private exportDataError: string;
+    public ExportDataSuccess: boolean;
 
     constructor() {
         this.nextRowId = 0;
@@ -31,21 +35,36 @@ class JobSearchViewModel {
         this.DetailsShown = false;
         this.JobSearchData = [];
         this.Settings = Settings.LoadSettings();
-        this.LoadData();
-        this.populateCurrentView();
         this.currentSortOrder = this.Settings.DefaultSortOrder;
         this.sortView(this.currentSortOrder);
         this.SettingsShown = false;
+        this.ImportExportShown = false;
         this.searchTerm = "";
+        this.importData = "";
+        this.importFormatError = false;
+        this.exportDataError = "";
+        this.ExportDataSuccess = false;
+        this.LoadData(null);
+        this.populateCurrentView();
     }
 
-    public LoadData(): void {
-        this.JobSearchData = [];
-        // Load data from localStorage
-        let storedJobSearchData: string | null = localStorage.getItem(storageKey);
+    public LoadData(jobSearchData: string | null): void {
+        if (jobSearchData == null) {
+            // Load data from localStorage
+            jobSearchData = localStorage.getItem(storageKey);
+        }
+
         let largestIdFound: number = 0;
-        if (storedJobSearchData != null && storedJobSearchData.length > 0) {
-            let loadedData: JobSearchItem[] = JSON.parse(storedJobSearchData);
+        if (jobSearchData != null && jobSearchData.length > 0) {
+            let loadedData: JobSearchItem[] = [];
+            try {
+                loadedData = JSON.parse(jobSearchData);
+            } catch (e) {
+                throw e;
+            }
+            
+            this.JobSearchData = [];
+
             loadedData.forEach((row) => {
                 let newItem: JobSearchItem = new JobSearchItem(row.Id, row.StartDate.Value, row.UpdatedDate.Value, row.EmployerName.Value, row.JobTitle.Value, row.Open);
                 newItem.SetDetails(row.Details);
@@ -140,7 +159,7 @@ class JobSearchViewModel {
     }
 
     public Revert(): void {
-        this.LoadData();
+        this.LoadData(null);
         this.rowsHaveBeenDeleted = false;
         this.Settings.Revert();
         this.refreshCurrentView();
@@ -386,6 +405,82 @@ class JobSearchViewModel {
     set EndDateRangeFiltering(newValue: boolean) {
         this.Settings.DateRangeEndFilteringOn = newValue;
         this.populateCurrentView();
+    }
+
+    public ExportData() {
+        try {
+            let exportableJSON = JSON.stringify(this.JobSearchData);
+            let encodedExportableJSON: string = btoa(exportableJSON);
+            // Copy to clipboard
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(encodedExportableJSON).then(() => {
+                    this.ExportDataSuccess = true;
+                }).catch((e) => {
+                    this.ExportDataSuccess = false;
+                    this.ExportDataError = "Can't copy to the clipboard!";
+                    console.error(`Exception caught while copying exported data to the clipboard: ${e}`);
+                });
+            } else {
+                this.ExportDataSuccess = false;
+                this.ExportDataError = "This browser won't allow copying to the clipboard!";
+            }
+        } catch (e) {
+            console.error(`Exception caught while trying to export data: ${e}`);
+        }
+    }
+
+    get ImportData(): string {
+        return this.importData;
+    }
+
+    set ImportData(newImportData: string) {
+        this.importData = newImportData;
+
+        this.ExportDataSuccess = false;
+        if (this.importData.length > 0) {
+            try {
+                atob(newImportData);
+            } catch (e) {
+                console.error(e);
+                this.ImportFormatError = true;
+            }
+        } else {
+            this.ImportFormatError = false;
+        }
+    }
+
+    public PerformDataImport() {
+        try {
+            const decodedImportData: string = atob(this.importData);
+            this.LoadData(decodedImportData);
+            this.populateCurrentView();
+            this.importData = "";
+        } catch (e) {
+            console.error(e);
+            this.ImportFormatError = true;
+        }
+    }
+
+    get ImportFormatError(): boolean {
+        return this.importFormatError;
+    }
+
+    set ImportFormatError(hasError: boolean) {
+        this.importFormatError = hasError;
+        if (hasError) {
+            this.ExportDataError = "";
+        }
+    }
+
+    get ExportDataError(): string {
+        return this.exportDataError;
+    }
+
+    set ExportDataError(error: string) {
+        this.exportDataError = error;
+        if (error.length > 0) {
+            this.importFormatError = false;
+        }
     }
 }
 

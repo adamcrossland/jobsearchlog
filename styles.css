@@ -84,3 +84,30 @@ tr {
 .danger-button {
     background-color: red;
 }
+
+.export-explanation {
+    margin-left: 1em;
+}
+
+.export-explanation-warning {
+    color: red;
+}
+
+.export-data-error {
+    color: red;
+    font-style: italic;
+}
+
+.export-data-success {
+    color: green;
+    font-style: italic;
+}
+
+.import-data-error {
+    color: red;
+    font-style: italic;
+}
+
+.warning-text {
+    color: darkmagenta;
+}
