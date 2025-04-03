@@ -16,7 +16,7 @@
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata" @keydown.ctrl.s.prevent.stop.window="Persist()">
         <div class="toplevel-buttons">
-            <button aria-label="Add new search" title="Add Search" class="mg-button mg-button--small mg-button--outline top-level-button"
+            <button aria-label="Add new job application" title="Add Job Application" class="mg-button mg-button--small mg-button--outline top-level-button"
                 @click="NewSearchRow()" x-show="!DetailsShown">+ Add</button>
             <button aria-label="Save changes" title="Save Changes" class="mg-button mg-button--small top-level-button"
                 x-cloak x-show="PersistableChanges" @click="Persist()">Save</button>
