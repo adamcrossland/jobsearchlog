@@ -258,6 +258,7 @@
                     </div>
                     <div class="grid-cel mg-x6 mg-text-center">
                         <button class="mg-button mg-button--small mg-button--clear"
+                        aria-label="Hide details" title="Hide Details"
                             @click="DetailsShown = false">Hide Details</button>
                     </div>
                 </div>
@@ -269,12 +270,21 @@
                 </div>
                 <div class="mg-row mg-m-hidden detail-buttons">
                     <div class="grid-cel mg-x12">
-                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(1)">Add Note</button>
-                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(2)">Add Contact</button>
-                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(3)">Add URL</button>
-                        <button class="mg-button mg-button--small mg-button--clear" @click="DetailsToShow.AddDetail(4)">Add State</button>
+                        <button class="mg-button mg-button--small mg-button--clear"
+                            @click="DetailsToShow.AddDetail(1)"
+                            aria-label="Add note" title="Add Note">Add Note</button>
+                        <button class="mg-button mg-button--small mg-button--clear"
+                            @click="DetailsToShow.AddDetail(2)"
+                            aria-label="Add contact" title="Add Contact">Add Contact</button>
+                        <button class="mg-button mg-button--small mg-button--clear"
+                            @click="DetailsToShow.AddDetail(3)"
+                            aria-label="Add URL" title="Add URL">Add URL</button>
+                        <button class="mg-button mg-button--small mg-button--clear"
+                            @click="DetailsToShow.AddDetail(4)"
+                            aria-label="Add state" title="Add State">Add State</button>
                         <button class="mg-button mg-button--small mg-right danger-button"
-                            @click="DetailsShown = false;Delete(DetailsToShow.Id)">- Delete</button>
+                            @click="DetailsShown = false;Delete(DetailsToShow.Id)"
+                            aria-label="Delete detail" title="Delete Detail`">- Delete</button>
                         <button class="mg-button mg-button--small mg-right warning-button"
                             @click="DetailsToShow.Open = !DetailsToShow.Open">
                             <span x-show="DetailsToShow.Open">Deactivate</span>
