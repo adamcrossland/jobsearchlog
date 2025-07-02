@@ -11,7 +11,7 @@ export class DataItem implements IDataItem {
     public Value: string;
     public BeingEdited: boolean;
 
-    private tempValue: string|null;
+    protected tempValue: string|null;
     private prepersistedValue: string|null;
 
     constructor(value: string = "", beingEdited: boolean = false) {
@@ -80,6 +80,7 @@ export enum DetailKind {
 export class DetailDataItem extends DataItem {
     public Kind: DetailKind;
     public AddedDate: string;
+    static linkedInRegExp = /^(https:\/\/www.linkedin\.com\/jobs\/view\/\d+\/).+/;
 
     constructor(newKind:DetailKind = DetailKind.Unknown, value:string = "", addedDate:Date = new Date()) {
         super(value, false);
@@ -101,6 +102,20 @@ export class DetailDataItem extends DataItem {
         }
 
         return text;
+    }
+
+    public override SaveChanges(): void {
+        if (this.Kind === 3) {
+            // For URLs, we may apply transformation to shorten them to only the
+            // important values. For example, LinkedIn links have loads of parameters
+            // that are not realy needed for us.
+            let liMatch = DetailDataItem.linkedInRegExp.exec(this.tempValue ?? "");
+            if (liMatch != null) {
+                this.tempValue = liMatch[1];
+            }
+
+            super.SaveChanges();
+        }   
     }
 
     public toJSON() {
