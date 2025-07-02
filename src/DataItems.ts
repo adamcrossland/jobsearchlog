@@ -115,7 +115,9 @@ export class DetailDataItem extends DataItem {
             }
 
             super.SaveChanges();
-        }   
+        } else {
+            super.SaveChanges();
+        }  
     }
 
     public toJSON() {
