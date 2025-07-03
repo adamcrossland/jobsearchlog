@@ -341,10 +341,17 @@
                                 </button>
                                 <span class="mg-badge success" x-show="eachDetail.Copied">Copied</span>
                             </div>
-                            <div class="grid-cel mg-x1">
+                            <div class="grid-cel mg-x1 mg-s-hidden">
                                 <button aria-label="Delete this detail" title="Delete Detail"
                                     class="mg-button mg-button--small mg-button--clear row-level-button"
                                     @click="DetailsToShow.DeleteDetail(detailIndex)">- Delete</button>
+                            </div>
+                            <div class="grid-cel mg-x1 mg-s-display">
+                                <button aria-label="Delete this detail" title="Delete Detail"
+                                    class="mg-button mg-button--small mg-button--clear row-level-button"
+                                    @click="DetailsToShow.DeleteDetail(detailIndex)">
+                                    <i class="mg-icon icon-minus"></i>
+                                </button>
                             </div>
                         </div>
                     </template>
