@@ -81,11 +81,13 @@ export class DetailDataItem extends DataItem {
     public Kind: DetailKind;
     public AddedDate: string;
     static linkedInRegExp = /^(https:\/\/www.linkedin\.com\/jobs\/view\/\d+\/).+/;
+    private copied: boolean;
 
     constructor(newKind:DetailKind = DetailKind.Unknown, value:string = "", addedDate:Date = new Date()) {
         super(value, false);
         this.Kind = newKind;
-        this.AddedDate =  dateToString(addedDate);
+        this.AddedDate = dateToString(addedDate);
+        this.copied = false;
     }
 
     public get KindText(): string {
@@ -126,6 +128,23 @@ export class DetailDataItem extends DataItem {
             Kind: this.Kind,
             AddedDate: this.AddedDate
         } 
-    } 
+    }
+
+    public get Copied(): boolean {
+        return this.copied;
+    }
+
+    public set Copied(val: boolean) {
+        this.copied = val;
+        if (val) {
+            // The copied status is true for five seconds and is then reset
+            setTimeout(() => { this.copied = false }, 5000);
+        }
+    }
+
+    public CopyToClipboard() {
+        navigator.clipboard.writeText(this.Data);
+        this.Copied = true;
+    }
 }
 

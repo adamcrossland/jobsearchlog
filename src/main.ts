@@ -27,6 +27,7 @@ class JobSearchViewModel {
     private importFormatError: boolean;
     private exportDataError: string;
     public ExportDataSuccess: boolean;
+    private clipboardAvailable: boolean;
 
     constructor() {
         this.nextRowId = 0;
@@ -46,6 +47,7 @@ class JobSearchViewModel {
         this.ExportDataSuccess = false;
         this.LoadData(null);
         this.populateCurrentView();
+        this.clipboardAvailable = navigator.clipboard != null;
     }
 
     public LoadData(jobSearchData: string | null): void {
@@ -503,6 +505,10 @@ class JobSearchViewModel {
 
     get RowsInViewCount(): number {
         return this.CurrentView.length;
+    }
+
+    get ClipboardAvailable(): boolean {
+        return this.clipboardAvailable;
     }
 }
 
