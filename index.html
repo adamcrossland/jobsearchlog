@@ -12,7 +12,7 @@
     <title>Job Search Log</title>
 </head>
 
-<body>
+<body class="mg-container">
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata" @keydown.ctrl.s.prevent.stop.window="Persist()">
         <div class="toplevel-buttons">
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-        <div class="search-bar mg-container">
+        <div class="search-bar">
             <div class="mg-row mg-x--start">
                 <div class="mg-group grid-cel mg-x10">
                     <div class="mg-dropdown">
