@@ -12,7 +12,7 @@
     <title>Job Search Log</title>
 </head>
 
-<body>
+<body class="mg-container">
     <h1>Job Search Log</h1>
     <div x-data="$store.jobsearchdata" @keydown.ctrl.s.prevent.stop.window="Persist()">
         <div class="toplevel-buttons">
@@ -54,7 +54,7 @@
                         @click="PerformDataImport" :disabled="ImportData.length == 0 || ImportFormatError">Import</button>
                     <div class="grid-cel mg-x8 export-explanation">
                         <span>Paste the data from the Export
-                            button in the box below and hit the Import Data button to load it
+                            button in the box below and hit the Import button to load it
                             into this browser.</span>
                         <span class="warning-text">Importing data from another
                             browser will destroy any Job Search Log data in this browser. Please
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-        <div class="search-bar mg-container">
+        <div class="search-bar">
             <div class="mg-row mg-x--start">
                 <div class="mg-group grid-cel mg-x10">
                     <div class="mg-dropdown">
@@ -181,6 +181,23 @@
         <div class="summary-page" x-show="!DetailsShown" x-transition.duration.100ms>
             <div x-show="IsEmpty()">
                 <h2>No job search activities have been added yet.</h2>
+                <h3>New here?</h3>
+                <p>Sorry to hear that you need to undertake a job search. It's stressful,
+                    but you can do this.
+                </p>
+                <p>If you're not sure how to start with using this app, just hit the
+                    "+ Add" button above, and play around with it. Enter the name of the
+                    employer to which you are applying and the title of the job. That's
+                    all.
+                </p>
+                <p>If you'd like to record more information, hit the "..." button, and
+                    you will be able to add any amount of other data about the application,
+                    like pay range, a URL for the posting, contact information, the state
+                    of the application. Anything, really.
+                </p>
+                <p>Questions? You can contact the developer of this app at
+                    adam[dot]crossland[at]gmail[dot]com.
+                </p>
             </div>
             <div class="search-data" x-show="!IsEmpty()">
                 <div class="container" id="searches-table" x-cloak>
@@ -203,7 +220,13 @@
                                 <input class="input-area employer-name-editable" type="text" x-model="eachSearch.EmployerName.Data"
                                     placeholder="Employer">
                             </div>
-                            <div class="grid-cel mg-x4 summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
+                            <!-- for larger screens-->
+                            <div class="grid-cel mg-x4 mg-s-hidden summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
+                                x-show="!eachSearch.JobTitle.BeingEdited">
+                                <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
+                            </div>
+                            <!-- For mobile vertical -->
+                            <div class="grid-cel mg-x6 mg-s-display summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
                                 x-show="!eachSearch.JobTitle.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
                             </div>
