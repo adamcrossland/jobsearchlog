@@ -217,7 +217,13 @@
                                 <input class="input-area employer-name-editable" type="text" x-model="eachSearch.EmployerName.Data"
                                     placeholder="Employer">
                             </div>
-                            <div class="grid-cel mg-x4 summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
+                            <!-- for larger screens-->
+                            <div class="grid-cel mg-x4 mg-s-hidden summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
+                                x-show="!eachSearch.JobTitle.BeingEdited">
+                                <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
+                            </div>
+                            <!-- For mobile vertical -->
+                            <div class="grid-cel mg-x6 mg-s-display summary-info" @click="eachSearch.JobTitle.BeingEdited = true"
                                 x-show="!eachSearch.JobTitle.BeingEdited">
                                 <span class="summary-info" x-text="eachSearch.JobTitle.Data"></span>
                             </div>
