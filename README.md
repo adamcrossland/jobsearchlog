@@ -6,4 +6,5 @@ I created this during a recent job search during which I needed to apply for une
 
 It stores all of its data in the browser's *localStorage*, so there is no server component, and no data goes anywhere. Secure. Private. Nice.
 
-This application is hosted at https://crossland.dev/jobsearchlogapp
+This application is hosted at https://jobsearchlog.com
+
