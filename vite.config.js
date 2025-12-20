@@ -21,7 +21,24 @@ export default {
                 ]
             },
             workbox: {
-                globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}']
+                globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+                runtimeCaching: [
+                    {
+                        urlPattern: ({ request }) =>
+                            request.destination === 'font',
+                        handler: 'CacheFirst',
+                        options: {
+                            cacheName: 'fonts-cache',
+                            expiration: {
+                                maxEntries: 10,
+                                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+                            },
+                            cacheableResponse: {
+                                statuses: [0, 200]
+                            }
+                        }
+                    }
+                ]
             }
         })
     ]
