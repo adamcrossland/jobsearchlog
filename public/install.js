@@ -44,7 +44,7 @@
             caches.open(appName).then(cache => {
                 return Promise.all(
                     contentToCache.map(asset => {
-                        const assetPath = `https://crossland.dev/jobsearchlogapp${asset}`;
+                        const assetPath = `https://jobsearchlog.com/${asset}`;
                         return cache.add(assetPath)
                             .then(() => console.log(`Successfully cached ${assetPath}`))
                             .catch(err => {
