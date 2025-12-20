@@ -4,6 +4,7 @@ import { DataItem} from "./dataitems"
 import Settings from "./settings"
 import { SortOrder } from './sorting'
 import { JobSearchItem} from  "./jobsearchitem"
+import "./assets/fonts/fonts.css"
 
 // suggested in the Alpine docs:
 // make Alpine on window available for better DX
