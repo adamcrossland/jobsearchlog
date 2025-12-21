@@ -6,5 +6,7 @@ I created this during a recent job search during which I needed to apply for une
 
 It stores all of its data in the browser's *localStorage*, so there is no server component, and no data goes anywhere. Secure. Private. Nice.
 
+It is also a Progressive Web App that caches all of its required resources, so you can keep track of your job applications while you are camping in the mountains.
+
 This application is hosted at https://jobsearchlog.com
 
