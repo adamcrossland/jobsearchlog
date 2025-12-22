@@ -1,5 +1,14 @@
-import { VitePWA } from 'vite-plugin-pwa'
+import { VitePWA } from 'vite-plugin-pwa';
+import { defineConfig } from 'vite';
+
 export default {
+    build: {
+        rollupOptions: {
+            output: {
+                entryFileNames: 'RobotoSlab-Regular.ttf'
+            }
+        }
+    },
     plugins: [
         VitePWA({
             manifest: {
