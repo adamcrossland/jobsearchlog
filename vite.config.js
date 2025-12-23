@@ -5,7 +5,7 @@ export default {
     build: {
         rollupOptions: {
             output: {
-                entryFileNames: 'RobotoSlab-Regular.ttf'
+                //entryFileNames: 'RobotoSlab-Regular.ttf'
             }
         }
     },
